@@ -1,7 +1,7 @@
 \documentclass[9pt]{article}
 \usepackage{outline}
 \usepackage[footskip=0.05in]{geometry}
-\title {Towards Optimized Fog Computing Infrastructure}
+\title {Towards Fog-aware Kubernetes}
 \date{}
 \pagestyle{empty}
 
@@ -12,11 +12,12 @@
 		\item {\bf Abstract {\em (to be determined later)}}
 		\item {\bf Introduction }
   		\begin{outline}
-			\item {\bf Clouding history and the introduction of Fog computing.} 
+			\item {\bf Fog Computing Concept.} 
     		\begin{outline}
-    			\item The start of Cloud Computing.
-    			\item The problems associated with the clouding architecture. 
-    			\item The introduction of Fog computing to resolve those problems. 
+    			\item The introduction of Fog computing.
+    			\item The resource Fog provide.
+    			\item Fog targeted application and user proximity. 
+    			\item Platforms for fog. 
     		\end{outline}
     		\item {\bf Kubernetes}
     		\begin{outline}
@@ -29,31 +30,41 @@
      \end{outline}
     		
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END OF INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    		
-    		    	
-	\item {\bf Fog computing {\em State-of-the-art} and advantages over Cloud. }
-	\begin{outline}
-	  	\item Why Fog computing exists? 
-  		\item What the problem resolved by Fog computing?  
-  		\item Why Fog is the future? (IOT, end-to-end latency, location awareness).
-    \end{outline}
-  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END OF THE STATE OF ART %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	\item {\bf Kubernetes and Fog computing. }
 	\begin{outline}
 	\small (Divided into sections that will be treated separately)
-		\item The centralization and the impact on the performance.
-		\item end to end latency is ignored. 
-		\item location awareness.
-				
+		\item Kubernetes backbone components:
+			\begin{itemize}
+				\item pods.
+				\item deployment controllers. 
+				\item services.
+				\item Load-balancers, scheduling, ... 
+			\end{itemize}
+		\item Advantages:
+		\begin{itemize}
+			\item Community.
+			\item Scalability.
+			\item Containerized.
+			\item Clean separation between the app and the system.
+			\item Distribution  
+		\end{itemize}
+		
+		\item Disadvantages: 
+		\begin{itemize}
+			\item Centralization.
+			\item Location awareness.
+			\item Bad load balancing allocations doesn't consider the latency.
+			\item Scheduling regardless the location.
+		\end{itemize}
 	\end{outline}
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END OF PROBLEM DECLARATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\item {\bf  A location aware service in Kubernetes.}
+	\item {\bf  A Road map towards a Fog aware Kubernetes}
 	\begin{outline}
-		\item Formulate specifically the problem of location awareness in the fog context.
-		\item How we solve it, and what have been changed in Kubernetes. 
-		\item A brief explanation of our test-bed.
-		\item our result if any. 
+		\item The decentralization.
+		\item Location awareness. 
+		\item Scheduling schemes.
 				
 	\end{outline}
 
