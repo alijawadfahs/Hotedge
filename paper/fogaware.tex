@@ -1,0 +1,125 @@
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{usenix,epsfig,endnotes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DELETE AFTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+\setlength{\marginparwidth}{2cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEGIN%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%don't want date printed
+\date{}
+\title{\Large \bf Towards Fog-aware Kubernetes}
+\author{
+{\rm Ali J. Fahs}\\
+Univ Rennes, CNRS, IRISA\\
+ali.fahs@irisa.fr
+\and
+{\rm Guillaume Pierre}\\
+Univ Rennes, Inria, CNRS, IRISA\\
+guillaume.pierre@irisa.fr
+}
+\maketitle
+\thispagestyle{empty}
+
+
+\subsection*{Abstract}
+Your Abstract Text Goes Here.  Just a few facts.Whet our appetites.
+Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words  According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%The introduction of Fog computing. DONE
+Clouds have offered the separation of the user and the hardware, such separation of duties between the cloud provider who is responsible for the management of the storage and compute resources, and the clouds user who is {\em ---thanks to cloud computing---} responsible for running and optimizing his application only.
+
+The separation was not limited to the management alone, but also to the geographical location. The user applications can run in any server regardless of the geographical location, and the communication between the user and the server is done through internet connections. The location of the cloud servers are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness feature is sometimes vital for specific types of application {\em (eg. IoT applications)}.
+
+The demand of low latency and location awareness, throughout the emergence of new types of application results in the creation of an extended paradigm of   \change{Rephrase!}  Clouds. This paradigm was called {\em Fog computing}\cite{bonomi2011connected,Bonomi:2012:FCR:2342509.2342513}.
+
+%The resource Fog provide.
+The Fog computing was defined as an intermediary platform between the end devices and the cloud computing data centers. This platform provides compute, storage and networking resources, which are common between cloud and fog computing. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness\unsure{to many differences ?}. 
+
+%Fog targeted application and user proximity.
+The Distribution of the fog access points, has enabled the proximity to end devices. Since the end devices are close to the source, the latency can be significantly reduced, which will increase improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the applications scheduling.
+
+%Platforms for fog.
+Fog computing servers run in top of platforms like Docker swarm, Mesos, and most importantly Kubernetes.\change{not satisfied!}
+
+%Kubernetes and Clouds.
+Kubernetes is one of the most popular container-based orchestration  platform, it have been initially created to schedule cloud resources in compatibility with the workload.
+
+%Why Kubernetes is not compatible with Fog computing (briefly).
+Although Kubernetes provide automation and some source of load-balancing, still it doesn't have all the features to full-fill the definition \unsure{the definition or what?} of fog computing.    
+
+%paper objective 
+In this paper, we discuss the advantages and disadvantages of using Kubernetes as a fog computing platform. We target the main features that have to be changed/added to achieve a fog-aware platform, while providing a roadmap toward those features.\change{definitely rephrase!}
+
+
+%Explain organization of the report, what is included, and what is not.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fog Computing Platforms}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kubernetes and Fog Computing}
+
+\subsection{Kubernetes Backbone}
+\subsection{Kubernetes Advantages}
+\subsection{Kubernetes Disadvantages}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A Roadmap Towards Fog-aware Kubernetes}
+
+\subsection{The Decentralization}
+\subsection{Location Awareness}
+\subsection{Scheduling Schemes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acknowledgments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Acknowledgments}
+
+A polite author always includes acknowledgments.  Thank everyone,
+especially those who funded the work. 
+
+\section{Availability}
+
+
+%\theendnotes
+
+
+{\footnotesize \bibliographystyle{acm}
+\bibliography{bibtex}
+\newpage
+\listoftodos[Notes]
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
