@@ -13,7 +13,7 @@
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \setlength{\marginparwidth}{2cm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\usepackage[none]{hyphenat}
 
 
 
@@ -46,7 +46,7 @@ Keep it short. According to the APA style manual, an abstract should be between 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %The introduction of Fog computing. DONE
-Clouds have offered the separation of the user and the hardware, such separation of duties between the cloud provider who is responsible for the management of the storage and compute resources, and the clouds user who is {\em ---thanks to cloud computing---} responsible for running and optimizing his application only.
+Clouds have offered the separation of the user and the hardware\unsure{can we say this ?}, such separation of duties between the cloud provider who is responsible for the management of the storage and compute resources, and the clouds user who is {\em ---thanks to cloud computing---} responsible for running and optimizing his application only.
 
 The separation was not limited to the management alone, but also to the geographical location. The user applications can run in any server regardless of the geographical location, and the communication between the user and the server is done through internet connections. The location of the cloud servers are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness feature is sometimes vital for specific types of application {\em (eg. IoT applications)}.
 
@@ -56,10 +56,10 @@ The demand of low latency and location awareness, throughout the emergence of ne
 The Fog computing was defined as an intermediary platform between the end devices and the cloud computing data centers. This platform provides compute, storage and networking resources, which are common between cloud and fog computing. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness\unsure{to many differences ?}. 
 
 %Fog targeted application and user proximity.
-The Distribution of the fog access points, has enabled the proximity to end devices. Since the end devices are close to the source, the latency can be significantly reduced, which will increase improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the applications scheduling.
+The Distribution of the fog access points, has enabled the proximity to end devices. Since the end devices are close to the source, the latency can be significantly reduced, which will improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the workload scheduling.
 
 %Platforms for fog.
-Fog computing servers run in top of platforms like Docker swarm, Mesos, and most importantly Kubernetes.\change{not satisfied!}
+Fog computing servers run on top of platforms like Docker swarm, Mesos, and most importantly Kubernetes.\change{not satisfied!}
 
 %Kubernetes and Clouds.
 Kubernetes is one of the most popular container-based orchestration  platform, it have been initially created to schedule cloud resources in compatibility with the workload.
@@ -81,11 +81,59 @@ This paper is organised as follows. In the second section we introduce Kubernete
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kubernetes and Fog Computing}
 
-\subsection{Kubernetes Backbone}
+\subsection{Kubernetes Architecture}
+
+\info{image will be changed}
+\begin{figure}[th]
+\begin{center}
+\includegraphics[width=\textwidth/2]{images/arch.png}
+\end{center}
+\caption{Wonderful Flowchart}
+\end{figure}
+
+%paragraph linking
+Kubernetes is an open-source container-based platform created by Google, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contain the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
+
+In the following paragraph we will refer to the master node as master and the worker node as node. 
+
+%pods.
+%deployment controllers.
+Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network\unsure{maybe it's over detailed}. The pods are created using a deployment controller located in the master node, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. The automation in Kubernetes is responsible for the creation of the associated pods.
+
+The master can schedule the pods in any of the available nodes. The pods have to communicate between each others and with users. Those communications are carried away using: 
+
+\begin{itemize}
+	\item Apiserver and Kubelet for the pod-to-pod communication.
+	\item Apiserver and Kube-proxy for the communication with the user, through Kubernetes services.\improvement{shall we use k8's instead of kubernetes?}
+\end{itemize}
+%services
+\info{add a figure of service here}
+
+The main purpose of the service is connecting the users to exposed pods, by redirecting them to an available pod. The user will send the request to the service Ip address, then the service will choose one of the pods available in a resource pool\change{I will look for the correct name}\change{rephrase!} and looks for the Ip address of the pods in the Iptables. This selection is done in a random way or by using a load-balancer that will select the least used pod.
+
+\info{a flow chart of the redirecting process}
+
+
 \subsection{Kubernetes Advantages}
+
+%Community.
+
+%Scalability.
+
+%Containerized.
+
+%Clean separation between the app and the system.
+
+%Distribution
 \subsection{Kubernetes Disadvantages}
 
+%Centralization.
 
+%Location awareness.
+
+%Bad load balancing allocations doesn’t consider the latency.
+
+%Scheduling regardless the location.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Roadmap Towards Fog-aware Kubernetes}
