@@ -14,6 +14,8 @@
 \setlength{\marginparwidth}{2cm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[none]{hyphenat}
+\let\origref\ref
+\def\ref#1{\textbf{\origref{#1}}}
 
 
 
@@ -46,40 +48,45 @@ Keep it short. According to the APA style manual, an abstract should be between 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %The introduction of Fog computing. DONE
-Clouds have offered the separation of the user and the hardware\unsure{can we say this ?}, such separation of duties between the cloud provider who is responsible for the management of the storage and compute resources, and the clouds user who is {\em ---thanks to cloud computing---} responsible for running and optimizing his application only.
+In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on more than a few data centres to serve millions of users all-over the globe. 
 
-The separation was not limited to the management alone, but also to the geographical location. The user applications can run in any server regardless of the geographical location, and the communication between the user and the server is done through internet connections. The location of the cloud servers are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness feature is sometimes vital for specific types of application {\em (eg. IoT applications)}.
+Such a model have seen the light due to the lack of interest in locating the services in a specific geolocation. 
 
-The demand of low latency and location awareness, throughout the emergence of new types of application results in the creation of an extended paradigm of   \change{Rephrase!}  Clouds. This paradigm was called {\em Fog computing}\cite{bonomi2011connected,Bonomi:2012:FCR:2342509.2342513}.
+ The user's applications can run in any server regardless of the location, and the communication between the user and the server is done through internet connections.\unsure{maybe i will remove this} The location of the data centres are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness is sometimes vital for specific types of application {\em (e.g., IoT applications)}.\change{language check and rephrase}
+
+%The separation was not limited to the management alone, but also to the geographical location. 
+
+Nowadays, some applications require lower latencies and location awareness. These requirments will be provided by an extended extended paradigm of cloud computing called Fog computing\cite{bonomi2011connected,Bonomi:2012:FCR:2342509.2342513}.
 
 %The resource Fog provide.
-The Fog computing was defined as an intermediary platform between the end devices and the cloud computing data centers. This platform provides compute, storage and networking resources, which are common between cloud and fog computing. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness\unsure{to many differences ?}. 
+The Fog computing is defined as an intermediary platform between the end devices and the cloud computing data centres. This platform provides compute, storage and networking resources,similar to clouds. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness. 
 
 %Fog targeted application and user proximity.
-The Distribution of the fog access points, has enabled the proximity to end devices. Since the end devices are close to the source, the latency can be significantly reduced, which will improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the workload scheduling.
+Unlike clouds which relies in a handful of resources rich data-centres, fog is based on the idea of spreading plenty points of presence in the proximity of the user. Since the end devices are close to the source, the latency can be significantly reduced, which will improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the workload scheduling.
 
 %Platforms for fog.
-Fog computing servers run on top of platforms like Docker swarm, Mesos, and most importantly Kubernetes.\change{not satisfied!}
+Since the concept of fog is relatively new, no platform was designed to assist fog architecture. However, a fog computing cluster can be deployed on top of cloud platforms like Docker swarm, Mesos, and Kubernetes.
 
 %Kubernetes and Clouds.
-Kubernetes is one of the most popular container-based orchestration  platform, it have been initially created to schedule cloud resources in compatibility with the workload.
+For our cluster we have chosen Kubernetes for the reasons that will be mentioned in the paper.\change{link para}
 
 %Why Kubernetes is not compatible with Fog computing (briefly).
-Although Kubernetes provide automation and some source of load-balancing, still it doesn't have all the features to full-fill the definition \unsure{the definition or what?} of fog computing.    
+Although Kubernetes provide automation and some source of load-balancing, still it doesn't have all the features to full-fill the definition of fog computing.    
 
 %paper objective 
-In this paper, we discuss the advantages and disadvantages of using Kubernetes as a fog computing platform. We target the main features that have to be changed/added to achieve a fog-aware platform, while providing a roadmap toward those features.\change{definitely rephrase!}
+In this paper, we contribute a roadmap toward enabling a fog-aware Kubernetes.\change{definitely rephrase!}
 
 
 %Explain organization of the report, what is included, and what is not.
-This paper is organised as follows. In the second section we introduce Kubernetes as a platform, discuss the advantage and disadvantages in the context of fog. In the third section we demonstrate our vision through a roadmap of the steps that should be taken to achieve fog-aware Kubernetes. In the last section we conclude.\change{add something to the conclude}\unsure{long style style is ok ?} 
+This paper is organised as follows. In section \ref{plat} we briefly acknowledge the possible fog computing platforms. In section \ref{kube} we introduce Kubernetes as a platform, discuss the advantage and disadvantages in the context of fog. In section 
+\ref{road} we demonstrate our vision through a roadmap of the steps that should be taken to achieve fog-aware Kubernetes. In the last section we conclude.\change{add something to the conclude}\unsure{long style style is ok ?} 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Fog Computing Platforms}
+\section{Fog Computing Platforms}\label{plat}
 \lipsum[20]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Kubernetes and Fog Computing}
+\section{Kubernetes and Fog Computing}\label{kube}
 
 \subsection{Kubernetes Architecture}
 
@@ -136,7 +143,7 @@ The main purpose of the service is connecting the users to exposed pods, by redi
 %Scheduling regardless the location.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Roadmap Towards Fog-aware Kubernetes}
+\section{A Roadmap Towards Fog-aware Kubernetes}\label{road}
 
 \subsection{The Decentralization}
 \subsection{Location Awareness}
