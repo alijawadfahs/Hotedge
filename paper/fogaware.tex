@@ -48,7 +48,7 @@ Keep it short. According to the APA style manual, an abstract should be between 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %The introduction of Fog computing. DONE
-In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on more than a few data centres to serve millions of users all-over the globe. 
+\hskip .7em In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on more than a few data centres to serve millions of users all-over the globe. 
 
 Such a model have seen the light due to the lack of interest in locating the services in a specific geolocation. 
 
@@ -84,7 +84,7 @@ This paper is organised as follows. In section \ref{plat} we briefly acknowledge
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fog Computing Platforms}\label{plat}
-\lipsum[20]
+\hskip .5em \lipsum[20]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kubernetes and Fog Computing}\label{kube}
 
@@ -99,7 +99,7 @@ This paper is organised as follows. In section \ref{plat} we briefly acknowledge
 \end{figure}
 
 %paragraph linking
-Kubernetes is an open-source container-based platform, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contains the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
+\hskip .7em Kubernetes is an open-source container-based platform, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contains the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
 
 In the following paragraph we will refer to the master node as master and the worker node as node. 
 
@@ -126,7 +126,7 @@ The main purpose of the service is connecting the users to exposed pods, by redi
 \itemsep0em
 
 \item{\bf Community} 
-Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
+\hskip .7em Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
 
 The support provided by this community ease the development of the software for everyone, where a number of features Kubernetes have today were developed through this community.  
 \item {\bf Distribution} 
@@ -147,14 +147,27 @@ The fog architecture is based in wide distribution of plenty points of presence,
 
 \subsection{Kubernetes Disadvantages}
 
+\hskip .7em While building our own test-bed cluster and running K8's on top of it, and by looking deeper in the code, we have spoted some of the drawbacks for running K8's for fog computing, the draw-backs can be summarized in the following: 
 
-%Centralization.
+\begin{itemize}
+\itemsep0em
 
-%Location awareness.
 
-%Bad load balancing allocations doesn’t consider the latency.
+\item {\bf Centralization}
+K8's cluster is composed of master node and worker nodes, all the decision of the cluster are made by the master, and all the cluster controllers are located there. This impose this imposes higher latencies when executing jobs like deploying a container, also heavy computation are done in the master node to take all the decision of the cluster.\change{rephrase!}  
 
-%Scheduling regardless the location.
+\item{\bf Location awareness}
+The fact that K8's does not support location awareness is not shocking, since K8's is a cloud platform. Yet the location awareness is the number one characteristic of fog computing \cite{Bonomi:2012:FCR:2342509.2342513}. 
+The characteristic of location awareness is mainly required to allow the fog to trace the closest available resource, which will improve the latency.
+
+\item {\bf Load balancing}
+Load balancing in kubernetes is limited to external load balancers used in the cloud providers, since the fog is definitely not built in the cloud provider hardware then now load balancing options are available for the fog.\unsure{need to check more}
+
+\item {\bf Scheduling regardless the location}
+The deployment of the containers is not related to the location of the node neither, the scheduling of the incoming requests from the application users. As a result we will end up by the jobs traversing more hops in the network before reaching the targeted nodes, which implies higher end-to-end latencies.\change{rephrase!}
+
+
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Roadmap Towards Fog-aware Kubernetes}\label{road}
