@@ -99,13 +99,13 @@ This paper is organised as follows. In section \ref{plat} we briefly acknowledge
 \end{figure}
 
 %paragraph linking
-Kubernetes is an open-source container-based platform created by Google, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contain the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
+Kubernetes is an open-source container-based platform, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contains the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
 
 In the following paragraph we will refer to the master node as master and the worker node as node. 
 
 %pods.
 %deployment controllers.
-Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network\unsure{maybe it's over detailed}. The pods are created using a deployment controller located in the master node, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. The automation in Kubernetes is responsible for the creation of the associated pods.
+Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network\unsure{maybe it's over detailed}. The pods are created using a deployment controller located in the master node, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. The automation of Kubernetes is responsible for the creation of the associated pods.
 
 The master can schedule the pods in any of the available nodes. The pods have to communicate between each others and with users. Those communications are carried away using: 
 
@@ -116,23 +116,37 @@ The master can schedule the pods in any of the available nodes. The pods have to
 %services
 \info{add a figure of service here}
 
-The main purpose of the service is connecting the users to exposed pods, by redirecting them to an available pod. The user will send the request to the service Ip address, then the service will choose one of the pods available in a resource pool\change{I will look for the correct name}\change{rephrase!} and looks for the Ip address of the pods in the Iptables. This selection is done in a random way or by using a load-balancer that will select the least used pod.
+The main purpose of the service is connecting the users to exposed pods, by redirecting them to an available pod. The user will send the request to the service Ip address, then the service will choose one of the available pods in a resource pool\change{I will look for the correct name}\change{rephrase!} and looks for the Ip address of the pods in the Iptables. This selection is done in a random way or by using a load-balancer that will select the least used pod.
 
 \info{a flow chart of the redirecting process}
 
 
 \subsection{Kubernetes Advantages}
+\begin{itemize}
+\itemsep0em
 
-%Community.
+\item{\bf Community} 
+Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
 
-%Scalability.
+The support provided by this community ease the development of the software for everyone, where a number of features Kubernetes have today were developed through this community.  
+\item {\bf Distribution} 
+The fog architecture is based in wide distribution of plenty points of presence, spread over a geographical location. Kubernetes support building large clusters up to 5000 nodes and 150,000 pods, such support is ideal for fog distribution. 
+\item {\bf Scalability} as a result of supporting large clusters, Kubernetes had to simplify the procedure of scaling the cluster. Adding new nodes to the cluster is as simple as running a join command, and the master node will take care of everything, without the need of the maintainer interference. 
 
-%Containerized.
 
-%Clean separation between the app and the system.
+\item {\bf Containerization} running applications inside containers is the new trend over Virtualization. Containerization outperform virtualization in lightweight \unsure{it can function as an noun checked}and in the facilitation of  the application's packaging, shipping, and deployment. That's why cloud platforms like K8's are built around this emerging concept, where the benefits of containers also applies in fog computing architecture.  
 
-%Distribution
+\item {\bf Deployment} Kuberentes deployment is done using deployment controllers located in the master node, these controllers receives user's request for new deployments and interpret them in terms of pods. The user will monitor the pods as a deployment, and any failure of a pod or a node would be automatically resolved without a manual intervention. 
+
+
+
+
+
+\end{itemize}
+
+
 \subsection{Kubernetes Disadvantages}
+
 
 %Centralization.
 
