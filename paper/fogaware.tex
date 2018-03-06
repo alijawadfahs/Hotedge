@@ -84,24 +84,34 @@ This paper is organised as follows. In section \ref{plat} we briefly acknowledge
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fog Computing Platforms}\label{plat}
-\hskip .5em \lipsum[20]
+\hskip .5em For the fog architecture to function a set of infrastructure management tools are mandatory. In our search for the ideal platform we have focused on the ones that support containers, for the lightweight and portability containers offer over Virtual Machines(VM). 
+
+The container orchestration Engines can be summed up by the three most used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of these platforms provide container scheduling, cluster management, and support for large-scale clusters. 
+
+We have chosen Kubernetes for our cluster and our development for the added features it offers like auto-scaling, load balancing, the concept of a Kubernetes service, the concept of pods, and ingress. Due to Kubernetes large community, it requires less third-party software, since most of the add-on features are already integrated. \unsure{do I have to mention openstack}\change{Maybe i need to write more}\change{rephrasing is a must}
+
+\info{writing a small para for Picasso }
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kubernetes and Fog Computing}\label{kube}
 
 \subsection{Kubernetes Architecture}
+%\begin{figure}[th]
 
-\info{image will be changed}
+%\includegraphics[width=\textwidth/2]{images/arch.png}
 \begin{figure}[th]
-\begin{center}
-\includegraphics[width=\textwidth/2]{images/arch.png}
-\end{center}
-\caption{Wonderful Flowchart}
+
+
+\includegraphics[width=0.51\textwidth]{images/arch.png}
+
+
+\caption{Kubernetes architecture}
 \end{figure}
 
 %paragraph linking
 \hskip .7em Kubernetes is an open-source container-based platform, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes, where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, the master node contains the deployment scheduler and controllers. \change{rephrase!} Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
 
-In the following paragraph we will refer to the master node as master and the worker node as node. 
+In the following paragraphs we will refer to the master node as master and the worker node as node. 
 
 %pods.
 %deployment controllers.
@@ -110,15 +120,15 @@ Kubernetes runs containers in the form of pods, where a pod is a group of one or
 The master can schedule the pods in any of the available nodes. The pods have to communicate between each others and with users. Those communications are carried away using: 
 
 \begin{itemize}
-	\item Apiserver and Kubelet for the pod-to-pod communication.
-	\item Apiserver and Kube-proxy for the communication with the user, through Kubernetes services.\improvement{shall we use k8's instead of kubernetes?}
+	\item Software Defined Networking(SDN) for pod-to-pod communication.
+	\item Kube-proxy for the communication with the users, through K8's services.
 \end{itemize}
 %services
-\info{add a figure of service here}
-
-The main purpose of the service is connecting the users to exposed pods, by redirecting them to an available pod. The user will send the request to the service Ip address, then the service will choose one of the available pods in a resource pool\change{I will look for the correct name}\change{rephrase!} and looks for the Ip address of the pods in the Iptables. This selection is done in a random way or by using a load-balancer that will select the least used pod.
-
-\info{a flow chart of the redirecting process}
+The main purpose of the service is connecting the users to exposed pods, by redirecting them to an available pod. The user will send the request to the service Ip address, then the service will choose one of the available pods in a resource pool \change{I will look for the correct name}\change{rephrase!} and looks for the Ip address of the pods in the Iptables. This selection is done in a random way or by using a load-balancer that will select the least used pod.
+\begin{figure}[th]
+\centering\includegraphics[width=0.33\textwidth]{images/svc.png}
+\caption{Kubernetes service}
+\end{figure}
 
 
 \subsection{Kubernetes Advantages}
@@ -137,11 +147,6 @@ The fog architecture is based in wide distribution of plenty points of presence,
 \item {\bf Containerization} running applications inside containers is the new trend over Virtualization. Containerization outperform virtualization in lightweight \unsure{it can function as an noun checked}and in the facilitation of  the application's packaging, shipping, and deployment. That's why cloud platforms like K8's are built around this emerging concept, where the benefits of containers also applies in fog computing architecture.  
 
 \item {\bf Deployment} Kuberentes deployment is done using deployment controllers located in the master node, these controllers receives user's request for new deployments and interpret them in terms of pods. The user will monitor the pods as a deployment, and any failure of a pod or a node would be automatically resolved without a manual intervention. 
-
-
-
-
-
 \end{itemize}
 
 
@@ -154,17 +159,17 @@ The fog architecture is based in wide distribution of plenty points of presence,
 
 
 \item {\bf Centralization}
-K8's cluster is composed of master node and worker nodes, all the decision of the cluster are made by the master, and all the cluster controllers are located there. This impose this imposes higher latencies when executing jobs like deploying a container, also heavy computation are done in the master node to take all the decision of the cluster.\change{rephrase!}  
+K8's cluster is composed of master node and worker nodes, all the decision of the cluster are made by the master, and all the cluster controllers are located there. This imposes higher latencies when executing jobs like deploying a container, also heavy computations are done in the master node to take all the decision of the cluster.\change{rephrase!}  
 
 \item{\bf Location awareness}
 The fact that K8's does not support location awareness is not shocking, since K8's is a cloud platform. Yet the location awareness is the number one characteristic of fog computing \cite{Bonomi:2012:FCR:2342509.2342513}. 
 The characteristic of location awareness is mainly required to allow the fog to trace the closest available resource, which will improve the latency.
 
 \item {\bf Load balancing}
-Load balancing in kubernetes is limited to external load balancers used in the cloud providers, since the fog is definitely not built in the cloud provider hardware then now load balancing options are available for the fog.\unsure{need to check more}
+Load balancing in kubernetes is limited to external load balancers used in the cloud providers, since the fog is definitely not built in the cloud provider hardware then now load balancing options are not available for the fog.\unsure{need to check more}
 
 \item {\bf Scheduling regardless the location}
-The deployment of the containers is not related to the location of the node neither, the scheduling of the incoming requests from the application users. As a result we will end up by the jobs traversing more hops in the network before reaching the targeted nodes, which implies higher end-to-end latencies.\change{rephrase!}
+neither the deployment of the containers, nor the scheduling of the incoming requests from the application users  is related to the location of the node. As a result we will end up by the jobs traversing more hops in the network before reaching the targeted nodes, which implies higher end-to-end latencies.\change{rephrase!}
 
 
 \end{itemize}
