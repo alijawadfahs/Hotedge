@@ -12,12 +12,12 @@
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \setlength{\marginparwidth}{2cm}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[none]{hyphenat}
 \let\origref\ref
 \def\ref#1{\textbf{\origref{#1}}}
-
-
+\usepackage{multirow}
+\usepackage{rotating}
 
 
 
@@ -43,12 +43,11 @@ guillaume.pierre@irisa.fr
 
 
 \subsection*{Abstract}
-Your Abstract Text Goes Here.  Just a few facts.Whet our appetites.
-Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words  According to the APA style manual, an abstract should be between 150 to 250 words Keep it short. According to the APA style manual, an abstract should be between 150 to 250 words 
+Fog computing is a trending paradigm that extended clouds by providing lower latencies and location awareness. Deploying a fog over on of the cloud's platforms {\em ---like Kubernetes---} will violate the definition of the fog, due to the lack of location awareness. In this paper, we will suggest a roadmap to fill the gap between Kuberenetes and the fog, while arguing why the lack of this awareness will impact the fog performance.  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %The introduction of Fog computing. DONE
-\hskip .7em In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on more than a few data centres to serve millions of users all over the globe. 
+\hskip .7em In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on few data centres to serve millions of users all over the globe. 
 
 Such a model have seen the light due to the lack of interest in locating the services in a specific geolocation. The location of the data centres are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness is sometimes vital for specific types of application {\em (e.g., IoT applications)}.
 
@@ -66,7 +65,7 @@ Unlike clouds, which relies on a handful of gigantic data centres, fog is based 
 Since the concept of fog is relatively new, no platform was designed to assist fog architecture. However, a fog computing cluster can be deployed on top of cloud platforms like Docker swarm, Mesos, and Kubernetes. Out of these platforms we have chosen Kubernetes to be tested and improved for the reasons that will be discussed in the paper.
 
 %Why Kubernetes is not compatible with Fog computing (briefly).
-Although Kubernetes provide automation and some source of load-balancing, still it doesn't have all the features to full-fill the definition of the fog.    
+Although Kubernetes provide automation, still it doesn't have all the features to full-fill the definition of the fog.    
 
 %paper objective 
 In this paper, we contribute by demonstrating our vision through a roadmap of the steps that should be taken to achieve fog-aware Kubernetes.
@@ -74,18 +73,19 @@ In this paper, we contribute by demonstrating our vision through a roadmap of th
 
 %Explain organization of the report, what is included, and what is not.
 This paper is organised as follows. In section \ref{plat}, we briefly acknowledge the possible fog computing platforms. In section \ref{kube}, we introduce Kubernetes as a platform, discuss the advantage and disadvantages in the context of fog. In section 
-\ref{road}, we suggest the next steps through a roadmap. In the last section, we conclude.\change{add something to the conclude}
+\ref{road}, we suggest the next steps through a roadmap. In the last section, we conclude.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fog Computing Platforms}\label{plat}
-\hskip .5em For the fog architecture to function a set of infrastructure management tools are mandatory. In our search for a proper platform we have focused on the ones that support containers, for the lightweight and portability containers offer over Virtual Machines. 
+\hskip .5em For the fog architecture to function, a set of infrastructure management tools are mandatory, like scheduler, fault tolerance, orchestration. In our search for a proper platform we have focused on the ones that support containers, for the lightness and portability containers offer over Virtual Machines. 
 
-The container orchestration Engines can be summed up by the three most used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of these platforms provide container scheduling, cluster management, and support for large-scale clusters. 
+The container orchestration Engines can be summed up by the three most used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of the mentioned provide container scheduling, cluster management, and support for large-scale clusters. 
+PiCasso\cite{picasso} is a new platform of the container  orchestration in edge clouds, this platform focuses in the lightness and automation of the platform, yet it's still under development.\unsure{maybe no need for this}
+We have chosen Kubernetes for our cluster and our development for the added features it offers like auto-scaling, the concept of a Kubernetes service, the concept of pods, and ingresses. K8's have reached a point where it rarely needs a third-party software to function, since most of the desired features are already built in. \change{Maybe i need to write more}
 
-We have chosen Kubernetes for our cluster and our development for the added features it offers like auto-scaling, load balancing, the concept of a Kubernetes service, the concept of pods, and ingress. Due to Kubernetes large community, it requires less third-party software, since most of the add-on features are already integrated. \unsure{do I have to mention openstack}\change{Maybe i need to write more}\change{rephrasing is a must}
+PiCasso\cite{picasso} is a new platform of the container  
 
-\info{writing a small para for Picasso }
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kubernetes and Fog Computing}\label{kube}
@@ -109,23 +109,24 @@ In the following paragraphs we will refer to the master node as master and the w
 
 %pods.
 %deployment controllers.
-Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network\unsure{maybe it's over detailed}. The pods are created using a deployment controller located in the master node, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. The automation of Kubernetes is responsible for the creation and management of the associated pods.
+Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network. The pods are created using a deployment controller, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. Kubernetes is responsible for the creation and management of the associated pods.
 
-The master can schedule the pods in any of the available nodes. The pods have to communicate between each others and with users. Those communications are carried away using: 
+The master can schedule the pods in any node that have sufficient resources. Since the Pods are placed in different nodes, the pod-to-pod communication is not limited to localhost, at the same time the pods have to communicate with the end users, which leave us with two types of communications that are carried away using:
 
 \begin{itemize}
-	\item Software Defined Networking(SDN) for pod-to-pod communication.
-	\item Kube-proxy which will create services(Iptables) that the user can use to access the pods. 
+	\item Software Defined Networking(SDN), for pod-to-pod communication.
+	\item Kube-proxy, which will create services (Iptables) that the user can use to access the pods. 
 \end{itemize}
+
 %services
-The main purpose of the service is connecting the users to exposed pods (see Figure \ref{fig:svc}), by redirecting them to an available pod. Whenever a pod is exposed it will take a virtual Ip address (called endpoint), and the service will play the role of broker to assign the user requests to an available pod through this endpoint. Nonetheless, the selection of the pod is done in a random way, or in best cases using a third-party load balancer. The usage of services is essential in the case of replications, where a pod have one or more replicas. As in figure \ref{fig:svc} those replicas are distinguished using a label, where the services use this label to connect the user to any of these pods.    
+The main purpose of the service is connecting the users to exposed pods (see Figure \ref{fig:svc}), by redirecting them to an available pod. Whenever a pod is exposed, it will take a virtual Ip address (called endpoint), and the service will play the role of broker to assign the user's requests to an available pod through this endpoint. Nonetheless, the selection of the pod is done in a random way, or in best cases using a third-party load balancer. The usage of services is essential in the case of replications, where a pod have one or more replicas. As in figure \ref{fig:svc} those replicas are distinguished using a label, where the services use this label to connect the user to any of these pods.    
 \begin{figure}[t]
 \centering\includegraphics[width=0.33\textwidth]{images/svc.png}
 \caption{Kubernetes service}
 \label{fig:svc}
 \end{figure}
 
-\change{linking para}
+While building our own test-bed cluster and running K8's on top of it, and by looking deeper in the code, we have spotted some of the advantages and disadvantages for running K8's for the fog, that will be tackled in the next paragraphs.
 
 \subsection{Kubernetes Advantages}
 \begin{itemize}
@@ -136,19 +137,17 @@ The main purpose of the service is connecting the users to exposed pods (see Fig
 
 The support provided by this community ease the development of the software for everyone, where a number of features Kubernetes have today were developed by this community.  
 \item {\bf Distribution} 
-The fog architecture is based in wide distribution of plenty points of presence, spread over a geographical location. Kubernetes support building large clusters up to 5000 nodes and 150,000 pods, such support is ideal for fog distribution. 
+The fog architecture is based on wide distribution of plenty points of presence, spread over a geographical location. Kubernetes support building large clusters up to 5000 nodes and 150,000 pods, such support is ideal for fog distribution. 
 \item {\bf Scalability} As a result of supporting large clusters, Kubernetes had to simplify the procedure of scaling the cluster. Adding new nodes is as simple as running a join command, and the master node will take care of everything, without the need of the maintainer interference. 
 
 
-\item {\bf Containerization} running applications inside containers is the new trend over Virtualization. Containerization outperform virtualization in lightweight and in the facilitation of  the application's packaging, shipping, and deployment. That's why cloud platforms like K8's are built around this emerging concept, where the benefits of containers also applies in fog computing architecture.  
+\item {\bf Containerization} Running applications inside containers is the new trend over virtualization. Containerization outperform virtualization in lightness and in the facilitation of  the application's packaging, shipping, and deployment. That's why cloud platforms like K8's are built around this emerging concept, where the benefits of containers also applies in fog computing architecture.  
 
 \item {\bf Deployment} Kuberentes deployment is done using deployment controllers located in the master node, these controllers receives user's request for new deployments and interpret them in terms of pods. The user will monitor the pods as a deployment, and any failure of a pod or a node would be automatically resolved without a manual intervention. 
 \end{itemize}
 
 
 \subsection{Kubernetes Disadvantages}
-
-\hskip .7em While building our own test-bed cluster and running K8's on top of it, and by looking deeper in the code, we have spotted some of the drawbacks for running K8's for the fog, the draw-backs can be summarized in the following: 
 
 \begin{itemize}
 \itemsep0em
@@ -183,13 +182,12 @@ The K8's pods are described by the node that they are running on, and labels tha
 
 What we need to point out is the method K8's use to select one of the replicated pods, since in clouds the node are most likely homogeneous then the pod will be selected randomly, or in best case scenarios using a load balancer, which works normally for the cloud architecture, however this is not the case for the fog. The main thing that defines the nodes in the fog is the distribution, and the fact that each user can have a node in his proximity. A fog-aware platform should be able to identify this node and take advantages of it. 
 
-To test the effect of randomness on the end-to-end latencies,and using our cluster we have created a small web application, this web application have 3 replicas located in 3 different nodes. Figure \ref{fig:clus} demonstrates the topology of the nodes, in which the end user is connected to node 1 through hotspot.
+To test the effect of randomness on the end-to-end latencies,and using our cluster we have created a small web application, this web application have 2 replicas located in 2 different nodes. Figure \ref{fig:clus} demonstrates the topology of the nodes, in which the end user is connected to node 1 through Wifi hotspot.
 
-The end user will communicate with the service to be redirected to the web application pod, in this case we have 3 possibilities: 
+The end user will communicate with the service to be redirected to the web application pod, in this case we have 2 possibilities: 
 \begin{itemize}
 \item Pod 1, where the packets will pass by one network hop to reach the pod. 
-\item Pod 2, where the packets from the users have to pass by the local switch to reach the pod.
-\item Pod 3, where the packets have to traverse the infrastructure to reach the pod.
+\item Pod 2, where the packets have to traverse the infrastructure to reach the pod.
 \end{itemize}
  
  
@@ -200,16 +198,26 @@ The end user will communicate with the service to be redirected to the web appli
 \end{figure}
 \begin{table}[h]
 \begin{center}
-\begin{tabular}{ c || c c c }
- Node & node 1 & node 2 & node 3\\
- \hline 
- Average latency & 0.2 ms & 2.5 ms & {\bf tbt}
+\begin{tabular}{ c  c || c  c c}
+
+& & \multicolumn{2}{c} {Node} & \\
+& & node 1 & node 2 & \\
+\hline 
+\multirow{4}{1em}{\begin{turn}{90}Packet size \end{turn}} & 30 byte & 0.2 ms & 2.5 ms & \multirow{4}{1em}{\begin{turn}{90} Latency \end{turn}}\\
+& 100 byte & tbd ms & tbd ms &\\
+& 1000 byte & tbd ms & tbd ms &\\
+& 50,000 byte & 0.37 ms & 16.9 ms &\\
+\hline
+& Network hops & 1  & 3 & 
+ 
 \end{tabular}
-\caption{Latency}\label{tab:lat}
+\caption{Pods Performance as function of the selected pod}\label{tab:lat}
 \end{center}
 \end{table}
 
-We have collected the latency for accessing each of the pods over 1000 times. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Table \ref{tab:lat}. Even in such an ideal conditions, where the infrastructure is very controlled (not always the case for fog distribution), the results have reflected a significant increase of the latency, for example such a latency can effect the instantaneous feeling for the augmented reality.
+We have collected the latency for each of the pods over 1000 times, the latency was calculated by sending 50,000 byte UDP packets. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Table \ref{tab:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. 
+
+The difference between a node located in the 
 
 The absence of location awareness is not only needed while sending requests, but also at the deployment of the pods. Consider Figure \ref{fig:dep} where the mesh represents the geographical distribution of cluster consist of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
@@ -227,19 +235,19 @@ Also the location should be considered in the deployment policy of the pods. Ima
 
 Both of the previously mention steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
 
-\subsection{Scheduler Decentralization}
+%\subsection{Scheduler Decentralization}
 
-One of the disadvantages of Kubernetes as a fog platform is the centralization of the infrastructure, where the main components like the controllers and the scheduler are located exclusively in the master. which will impose higher latencies and heavy computations (at least for a Raspberry Pi). 
+%One of the disadvantages of Kubernetes as a fog platform is the centralization of the infrastructure, where the main components like the controllers and the scheduler are located exclusively in the master. which will impose higher latencies and heavy computations (at least for a Raspberry Pi). 
 
-The deployment of the pods are done in the following way: 
-\begin{itemize}
-\item The resource pool. 
-\item The scheduling. 
-\item the deployment.
-\end{itemize} 
+%The deployment of the pods are done in the following way: 
+%\begin{itemize}
+%\item The resource pool. 
+%\item The scheduling. 
+%\item the deployment.
+%\end{itemize} 
 
-all of the previous components are centralized in our future work we will try to decentralize each of the components starting from the deployment controller. 
-where our long term goal is reaching a fully decentralized k8's. 
+%all of the previous components are centralized in our future work we will try to decentralize each of the components starting from the deployment controller. 
+%where our long term goal is reaching a fully decentralized k8's. 
 
 
 
@@ -247,14 +255,12 @@ where our long term goal is reaching a fully decentralized k8's.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
+In this paper, we have targeted the challenges the fog have nowadays, the lack of a fully compatible platforms, and the need to add some key elements to the currently available platforms. We have added the motivation to update Kuberenetes to support the fog needs throughout running our own cluster and tackling the main issues we face. Finally, we have proposed our vision for the upcoming steps, that will be our next objective.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acknowledgments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Acknowledgments}
+\section{Acknowledgments} 
+\change{keep it for the prof., I don't know whom exactly is paying me :p }
 
-A polite author always includes acknowledgments.  Thank everyone,
-especially those who funded the work. 
-
-\section{Availability}
 
 
 \theendnotes
