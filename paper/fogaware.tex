@@ -48,8 +48,7 @@ Kubernetes is a mature and lightweight container management platform
 that easily scales to large-size clusters. However, we argue that in
 its current form it is essentially location-unaware, which makes it
 unsuitable to handle fog computing workloads. We therefore propose a
-roadmap of proposed extensions to fill the gap between Kubernetes and
-the fog.
+roadmap of extensions to fill the gap between Kubernetes and the fog.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
@@ -75,36 +74,77 @@ analytics).
 
 %The separation was not limited to the management alone, but also to the geographical location. 
 
-Nowadays, some applications require lower latencies and location awareness. These requirments will be provided by an extended paradigm of cloud computing called fog computing\cite{bonomi2011connected,Bonomi:2012:FCR:2342509.2342513}.
+An essential requirement for a fog computing platform is therefore to
+take the location of fog resources and end-user devices into account
+to ensure proximity between the two. However, most platforms available
+today such as OpenStack, Docker Swarm, Mesos and Kubernetes were
+initially designed with datacenter deployments in mind and therefore
+often do not provide location awareness in their resource scheduling
+and/or load balancing algorithms.
 
-%The resource Fog provide.
-The fog computing architecture included an intermediary level between the end devices and the cloud computing data centres. This platform provides compute, storage and networking resources, similar to clouds. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness. 
 
-%Fog targeted application and user proximity.
-Unlike clouds, which relies on a handful of gigantic data centres, fog is based on the idea of spreading several points of presence in the proximity of the user. Since the end devices are close to the source, the latency can be significantly reduced, which will improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the workload scheduling.
+
+% Nowadays, some applications require lower latencies and location awareness. These requirments will be provided by an extended paradigm of cloud computing called fog computing\cite{bonomi2011connected,Bonomi:2012:FCR:2342509.2342513}.
+
+% %The resource Fog provide.
+% The fog computing architecture included an intermediary level between the end devices and the cloud computing data centres. This platform provides compute, storage and networking resources, similar to clouds. Yet, the difference lies in the proximity to the user, low latency, distribution, and location awareness. 
+
+% %Fog targeted application and user proximity.
+% Unlike clouds, which relies on a handful of gigantic data centres, fog is based on the idea of spreading several points of presence in the proximity of the user. Since the end devices are close to the source, the latency can be significantly reduced, which will improve the users' experience. All of this can be done while considering the location of the access point as an important measure of the workload scheduling.
 
 %Platforms for fog.
-Since the concept of fog is relatively new, no platform was designed to assist fog architecture. However, a fog computing cluster can be deployed on top of cloud platforms like Docker swarm, Mesos, and Kubernetes. Out of these platforms we have chosen Kubernetes to be tested and improved for the reasons that will be discussed in the paper.
+% Since the concept of fog is relatively new, no platform was designed to assist fog architecture. However, a fog computing cluster can be deployed on top of cloud platforms like Docker swarm, Mesos, and Kubernetes. Out of these platforms we have chosen Kubernetes to be tested and improved for the reasons that will be discussed in the paper.
+
+In this paper we focus on understanding and addressing the limitations
+of Kubernetes in a fog computing scenario. Kubernetes matches many of
+the requirements of a fog platform in that it is highly scalable, it
+can run even on very limited machines thanks to its usage of
+lightweight containers rather than VMs. It is also a very open and
+mature platform which is now familiar to a large community of
+application developers. We discuss the limitations of the current
+implementation and propose a roadmap of the different improvements
+that remain necessary to make Kubernetes an equally attractive
+platform for fog computing scenarios as it is for cloud computing
+scenarios.
 
 %Why Kubernetes is not compatible with Fog computing (briefly).
-Although Kubernetes provide automation, still it doesn't have all the features to full-fill the definition of the fog.    
+% Although Kubernetes provide automation, still it doesn't have all the features to full-fill the definition of the fog.    
 
-%paper objective 
-In this paper, we contribute by demonstrating our vision through a roadmap of the steps that should be taken to achieve fog-aware Kubernetes.
+% %paper objective 
+% In this paper, we contribute by demonstrating our vision through a roadmap of the steps that should be taken to achieve fog-aware Kubernetes.
 
 
 %Explain organization of the report, what is included, and what is not.
-This paper is organised as follows. In section \ref{plat}, we briefly acknowledge the possible fog computing platforms. In section \ref{kube}, we introduce Kubernetes as a platform, discuss the advantage and disadvantages in the context of fog. In section 
-\ref{road}, we suggest the next steps through a roadmap. In the last section, we conclude.
+This paper is organised as follows. In Section~\ref{plat}, we briefly
+acknowledge the possible fog computing platforms. In
+section~\ref{kube}, we introduce Kubernetes as a platform, discuss the
+advantage and disadvantages in the context of fog. In
+section~\ref{road}, we suggest the next steps through a
+roadmap. Finally, in the last section, we conclude.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fog Computing Platforms}\label{plat}
-\hskip .5em For the fog architecture to function, a set of infrastructure management tools are mandatory, like scheduler, fault tolerance, orchestration. In our search for a proper platform we have focused on the ones that support containers, for the lightness and portability containers offer over Virtual Machines. 
 
-The container orchestration Engines can be summed up by the three most used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of the mentioned provide container scheduling, cluster management, and support for large-scale clusters. 
-PiCasso\cite{picasso} is a new platform of the container  orchestration in edge clouds, this platform focuses in the lightness and automation of the platform, yet it's still under development.\unsure{maybe no need for this}
-We have chosen Kubernetes for our cluster and our development for the added features it offers like auto-scaling, the concept of a Kubernetes service, the concept of pods, and ingresses. K8's have reached a point where it rarely needs a third-party software to function, since most of the desired features are already built in. \change{Maybe i need to write more}
+For the fog architecture to function, a set of infrastructure
+management tools are mandatory, like scheduler, fault tolerance,
+orchestration. In our search for a proper platform we have focused on
+the ones that support containers, for the lightness and portability
+containers offer over Virtual Machines.
+
+The container orchestration Engines can be summed up by the three most
+used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of the
+mentioned provide container scheduling, cluster management, and
+support for large-scale clusters.  PiCasso\cite{picasso} is a new
+platform of the container orchestration in edge clouds, this platform
+focuses in the lightness and automation of the platform, yet it's
+still under development.\unsure{maybe no need for this} We have chosen
+Kubernetes for our cluster and our development for the added features
+it offers like auto-scaling, the concept of a Kubernetes service, the
+concept of pods, and ingresses. K8's have reached a point where it
+rarely needs a third-party software to function, since most of the
+desired features are already built in. \change{Maybe i need to write
+  more}
 
 PiCasso\cite{picasso} is a new platform of the container  
 
