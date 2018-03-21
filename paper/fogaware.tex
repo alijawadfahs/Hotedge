@@ -28,10 +28,10 @@
 
 %don't want date printed
 \date{}
-\title{\Large \bf Towards Fog-aware Kubernetes}
+\title{\Large \bf Towards Fog-Aware Kubernetes}
 \author{
 {\rm Ali J. Fahs}\\
-Univ Rennes, CNRS, IRISA\\
+Univ Rennes, Inria, CNRS, IRISA\\
 ali.fahs@irisa.fr
 \and
 {\rm Guillaume Pierre}\\
@@ -43,13 +43,35 @@ guillaume.pierre@irisa.fr
 
 
 \subsection*{Abstract}
-Fog computing is a trending paradigm that extended clouds by providing lower latencies and location awareness. Deploying a fog over on of the cloud's platforms {\em ---like Kubernetes---} will violate the definition of the fog, due to the lack of location awareness. In this paper, we will suggest a roadmap to fill the gap between Kuberenetes and the fog, while arguing why the lack of this awareness will impact the fog performance.  
+
+Kubernetes is a mature and lightweight container management platform
+that easily scales to large-size clusters. However, we argue that in
+its current form it is essentially location-unaware, which makes it
+unsuitable to handle fog computing workloads. We therefore propose a
+roadmap of proposed extensions to fill the gap between Kubernetes and
+the fog.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %The introduction of Fog computing. DONE
-\hskip .7em In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on few data centres to serve millions of users all over the globe. 
 
-Such a model have seen the light due to the lack of interest in locating the services in a specific geolocation. The location of the data centres are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness is sometimes vital for specific types of application {\em (e.g., IoT applications)}.
+Fog computing extends the concept of cloud computing with additional
+resources which are organized in a very different manner: when cloud
+platforms aim to concentrate huge amounts of computing resources in a
+small number of data centers, fog computing rather aims to distribute
+resources as broadly as possible across some defined area so some
+resources are always located in the immediate vicinity of every end
+user's devices. Proximity between end user devices and the fog
+computing resources serving them is essential for application which
+require ultra-low network latencies (e.g., augmented reality
+applications) or where it is desirable to process data where input
+data was produced and processing results will be used (e.g., IoT data
+analytics).
+
+
+% \hskip .7em In a world where centralized data centres have been proven to be cost-effective, the big players of cloud services are relaying on few data centres to serve millions of users all over the globe. 
+
+% Such a model have seen the light due to the lack of interest in locating the services in a specific geolocation. The location of the data centres are chosen according to some factors like power cost, disregarding the impact on the end-to-end latency of the service. Furthermore, the cloud service user is not informed about the location of the server, where this location awareness is sometimes vital for specific types of application {\em (e.g., IoT applications)}.
 
 %The separation was not limited to the management alone, but also to the geographical location. 
 
