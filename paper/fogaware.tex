@@ -18,6 +18,8 @@
 \def\ref#1{\textbf{\origref{#1}}}
 \usepackage{multirow}
 \usepackage{rotating}
+\usepackage{url}
+\usepackage{hyperref}
 
 
 
@@ -115,65 +117,115 @@ scenarios.
 
 
 %Explain organization of the report, what is included, and what is not.
-This paper is organised as follows. In Section~\ref{plat}, we briefly
-acknowledge the possible fog computing platforms. In
-section~\ref{kube}, we introduce Kubernetes as a platform, discuss the
-advantage and disadvantages in the context of fog. In
-section~\ref{road}, we suggest the next steps through a
-roadmap. Finally, in the last section, we conclude.
+This paper is organised as follows. In Section~\ref{sec:plat}, we
+briefly acknowledge the possible fog computing platforms. In
+Section~\ref{sec:kube}, we introduce Kubernetes as a platform, discuss
+the advantage and disadvantages in the context of fog. In
+Section~\ref{sec:road}, we suggest the next steps through a
+roadmap. Finally, in Section~\ref{sec:conclusion} we conclude.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Fog Computing Platforms}\label{plat}
+\section{State of the art}\label{sec:plat}
 
-For the fog architecture to function, a set of infrastructure
-management tools are mandatory, like scheduler, fault tolerance,
-orchestration. In our search for a proper platform we have focused on
-the ones that support containers, for the lightness and portability
-containers offer over Virtual Machines.
+A fog computing platform is in charge of managing compute, storage and
+networking resources that are physically distributed across a
+geographical area such as a building, a neighborhood and a
+city~\cite{Bonomi:2012:FCR:2342509.2342513, fogecosystem}. It relies
+on virtualization techniques to support many independent end users and
+applications making use of these resources. For ressource-efficiency
+reasons we focused our efforts on platforms which rely on lightweight
+container technologies rather than virtual machines, enabling us to
+envisage fog computing platforms making use of resources as limited as
+Rasperry PIs for example~\cite{vankempen:hal-01446483}.
 
-The container orchestration Engines can be summed up by the three most
-used ones: Docker swarm, Mesos, and Kubernetes (K8's). All of the
-mentioned provide container scheduling, cluster management, and
-support for large-scale clusters.  PiCasso\cite{picasso} is a new
-platform of the container orchestration in edge clouds, this platform
-focuses in the lightness and automation of the platform, yet it's
-still under development.\unsure{maybe no need for this} We have chosen
-Kubernetes for our cluster and our development for the added features
-it offers like auto-scaling, the concept of a Kubernetes service, the
-concept of pods, and ingresses. K8's have reached a point where it
-rarely needs a third-party software to function, since most of the
-desired features are already built in. \change{Maybe i need to write
-  more}
 
-PiCasso\cite{picasso} is a new platform of the container  
+% architecture necessarily includes a number of
+% infrastructure management tools such as a scheduler, fault tolerance,
+% orchestration. In our search for a proper platform we have focused on
+% the ones that support containers, for the lightness and portability
+% containers offer over Virtual Machines.
+
+OpenStack++ is a set of OpenStack extensions that implements
+cloudlets, small-scale cloud data centers that are dispersed at the
+edge of the Internet~\cite{openstackplusplus}. A set of cloudlets may
+arguably be used to implement a fog platform. However, OpenStack++
+bases itself on VM technologies, which requires does not match our
+requirements for resource efficiency in the presence of large numbers
+of independent applications sharing the resources of modest computing
+devices.
+
+PiCasso~\cite{picasso} is a container orchestration platform that
+specifically targets edge clouds with a focus on lightness and
+platform automation. However, it is still under development and not
+publicly available.
+
+The most prominent container orchestration engines are Docker
+Swarm~\cite{swarm}, Apache Mesos~\cite{mesos} and
+Kubernetes~\cite{burns2016borg}, which all provide advanced features
+for container scheduling, cluster management, and support for
+large-scale clusters~\cite{kub-vs-swarm}. They are currently the most
+mature systems to support the deployment of a fog/cloud
+platform. However, they lack a number of functionalities that are
+essential for large-scale fog computing scenarios, as we discuss in
+the next section in the specific case of Kubernetes.
 
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Kubernetes and Fog Computing}\label{kube}
+\section{Kubernetes and Fog Computing}\label{sec:kube}
+
+We have chosen to base our efforts on Kubernetes.  In particular,
+Kubernetes offers many functionalities such as the concepts of pods
+and services, auto-scaling, and a clean separation between the
+applications and the underlying platform. It has also attracted a very
+large community of users and developers which position it as a highly
+mature platform. 
+
+However, Kubernetes was designed with cloud computing scenarios in
+mind. We briefly present its main architecture, and discuss its
+strengths and current limitations when trying to use it as the basis
+of a fog computing platform.
+
+
 
 \subsection{Kubernetes Architecture}
-%\begin{figure}[th]
 
-%\includegraphics[width=\textwidth/2]{images/arch.png}
 \begin{figure}[t]
-
-
-\includegraphics[width=0.51\textwidth]{images/arch.png}
-\caption{Kubernetes architecture}
-\label{fig:arch}
+  \centering
+  \includegraphics[width=\linewidth]{images/arch.png}
+  \caption{Kubernetes architecture} 
+  \label{fig:arch}
 \end{figure}
 
 %paragraph linking
-\hskip .7em Kubernetes is an open-source container-based platform, this platform manages the orchestration of the service instances. A Kubernetes cluster consist of one master node and worker nodes (see Figure \ref{fig:arch}), where a node does not necessarily refer to a physical machine, it can also be virtual. The master node is responsible for the management and monitoring of the cluster, where it contains the deployment controllers and the scheduler. Meanwhile, the worker nodes are the actual resources of the platform, they run the user application inside containers created by the master node. 
+Kubernetes is an open-source container-based platform, this platform
+manages the orchestration of the service instances. A Kubernetes
+cluster consist of one master node and worker nodes (see Figure
+\ref{fig:arch}), where a node does not necessarily refer to a physical
+machine, it can also be virtual. The master node is responsible for
+the management and monitoring of the cluster, where it contains the
+deployment controllers and the scheduler. Meanwhile, the worker nodes
+are the actual resources of the platform, they run the user
+application inside containers created by the master node.
 
-In the following paragraphs we will refer to the master node as master and the worker node as node. 
+In the following paragraphs we will refer to the master node as master
+and the worker node as node.
 
 %pods.
 %deployment controllers.
-Kubernetes runs containers in the form of pods, where a pod is a group of one or more containers. If a pod is consisting of more than one container, those containers can communicate internally using an isolated network. The pods are created using a deployment controller, and here we have to mention that the user is responsible of creating the deployment not the pods themselves. Kubernetes is responsible for the creation and management of the associated pods.
+Kubernetes runs containers in the form of pods, where a pod is a group
+of one or more containers. If a pod is consisting of more than one
+container, those containers can communicate internally using an
+isolated network. The pods are created using a deployment controller,
+and here we have to mention that the user is responsible of creating
+the deployment not the pods themselves. Kubernetes is responsible for
+the creation and management of the associated pods.
 
-The master can schedule the pods in any node that have sufficient resources. Since the Pods are placed in different nodes, the pod-to-pod communication is not limited to localhost, at the same time the pods have to communicate with the end users, which leave us with two types of communications that are carried away using:
+The master can schedule the pods in any node that have sufficient
+resources. Since the Pods are placed in different nodes, the
+pod-to-pod communication is not limited to localhost, at the same time
+the pods have to communicate with the end users, which leave us with
+two types of communications that are carried away using:
 
 \begin{itemize}
 	\item Software Defined Networking(SDN), for pod-to-pod communication.
@@ -181,21 +233,32 @@ The master can schedule the pods in any node that have sufficient resources. Sin
 \end{itemize}
 
 %services
-The main purpose of the service is connecting the users to exposed pods (see Figure \ref{fig:svc}), by redirecting them to an available pod. Whenever a pod is exposed, it will take a virtual Ip address (called endpoint), and the service will play the role of broker to assign the user's requests to an available pod through this endpoint. Nonetheless, the selection of the pod is done in a random way, or in best cases using a third-party load balancer. The usage of services is essential in the case of replications, where a pod have one or more replicas. As in figure \ref{fig:svc} those replicas are distinguished using a label, where the services use this label to connect the user to any of these pods.    
+The main purpose of the service is connecting the users to exposed
+pods (see Figure \ref{fig:svc}), by redirecting them to an available
+pod. Whenever a pod is exposed, it will take a virtual Ip address
+(called endpoint), and the service will play the role of broker to
+assign the user's requests to an available pod through this
+endpoint. Nonetheless, the selection of the pod is done in a random
+way, or in best cases using a third-party load balancer. The usage of
+services is essential in the case of replications, where a pod have
+one or more replicas. As in figure \ref{fig:svc} those replicas are
+distinguished using a label, where the services use this label to
+connect the user to any of these pods.
+
 \begin{figure}[t]
-\centering\includegraphics[width=0.33\textwidth]{images/svc.png}
-\caption{Kubernetes service}
-\label{fig:svc}
+  \centering
+  \includegraphics[width=.9\linewidth]{images/svc.png}
+  \caption{Organization of a Kubernetes service}
+  \label{fig:svc}
 \end{figure}
 
 While building our own test-bed cluster and running K8's on top of it, and by looking deeper in the code, we have spotted some of the advantages and disadvantages for running K8's for the fog, that will be tackled in the next paragraphs.
 
 \subsection{Kubernetes Advantages}
 \begin{itemize}
-\itemsep0em
 
 \item{\bf Community} 
-\hskip .7em Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
+Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
 
 The support provided by this community ease the development of the software for everyone, where a number of features Kubernetes have today were developed by this community.  
 \item {\bf Distribution} 
@@ -212,9 +275,6 @@ The fog architecture is based on wide distribution of plenty points of presence,
 \subsection{Kubernetes Disadvantages}
 
 \begin{itemize}
-\itemsep0em
-
-
 \item {\bf Centralization}
 K8's cluster is composed of master node and worker nodes, all the decision of the cluster are made by the master, and all the cluster controllers are located there. This imposes higher latencies when executing jobs like deploying a container, also heavy computations are done in the master node to take all the decision of the cluster.\change{rephrase!}  
 
@@ -232,7 +292,7 @@ Neither the deployment of the containers, nor the scheduling of the incoming req
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Roadmap Towards Fog-aware Kubernetes}\label{road}
+\section{A Roadmap Towards Fog-aware Kubernetes}\label{sec:road}
 
 Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
 
@@ -316,12 +376,20 @@ Both of the previously mention steps would need state-of-the-art algorithms that
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
-In this paper, we have targeted the challenges the fog have nowadays, the lack of a fully compatible platforms, and the need to add some key elements to the currently available platforms. We have added the motivation to update Kuberenetes to support the fog needs throughout running our own cluster and tackling the main issues we face. Finally, we have proposed our vision for the upcoming steps, that will be our next objective.  
+\section{Conclusion}\label{sec:conclusion}
+
+In this paper, we have targeted the challenges the fog have nowadays,
+the lack of a fully compatible platforms, and the need to add some key
+elements to the currently available platforms. We have added the
+motivation to update Kuberenetes to support the fog needs throughout
+running our own cluster and tackling the main issues we face. Finally,
+we have proposed our vision for the upcoming steps, that will be our
+next objective.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acknowledgments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Acknowledgments} 
-\change{keep it for the prof., I don't know whom exactly is paying me :p }
+% \section{Acknowledgments} 
+% \change{keep it for the prof., I don't know whom exactly is paying me :p }
+% \change{You are being paid by the Ministry of Higher Education and Research. They don't demand that we acknowledge them\ldots}
 
 
 
@@ -329,9 +397,9 @@ In this paper, we have targeted the challenges the fog have nowadays, the lack o
 
 
 {\footnotesize \bibliographystyle{acm}
-\bibliography{bibtex}
-\newpage
-\listoftodos[Notes]
+\bibliography{fogaware}}
+% \newpage
+% \listoftodos[Notes]
 
 
 
