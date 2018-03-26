@@ -233,7 +233,7 @@ be placed in different nodes, communication is established as follows:
 \begin{itemize}
 \item Container-to-container communication within a pod is enabled
   using the Container Network
-  Interface\footnote{https://github.com/containernetworking/cni},
+  Interface\footnote{\url{https://github.com/containernetworking/cni}},
   which enables connectivity between containers within a single
   machine.
 \item Communication between the pods is ensured a component called
@@ -265,28 +265,27 @@ Kubernetes as the basis for a fog computing platforms.
 \subsection{Kubernetes Advantages}
 
 Kubernetes has a number of properties that make it a great platform in
-cloud and fog computing environments.
+cloud as well as fog computing environments.
 
 
 \begin{description}
-\item[Distribution.] The fog architecture is based on wide distribution
-  of plenty points of presence, spread over a geographical
-  location. Kubernetes support building large clusters up to 5000
-  nodes and 150,000 pods, such support is ideal for fog distribution.
+\item[Scalability.] A fog architecture relies on wide distribution of
+  marge numbers of points of presence, spread over a potentially large
+  geographical area. Kubernetes supports large-scale clusters up to
+  5000 nodes and 150,000 pods, which largely matches the scalability
+  requirements of most fog computing scenarios.
 
-\item[Scalability.] As a result of supporting large clusters,
-  Kubernetes had to simplify the procedure of scaling the
-  cluster. Adding new nodes is as simple as running a join command,
-  and the master node will take care of everything, without the need
-  of the maintainer interference.
+\item[Simple management.] Managing a Kubernetes cluster is very simple
+  and robust. For example, adding new nodes is as simple as running a
+  join command, and the master node will take care of everything,
+  without the need of manual intervention.
 
-\item[Containerization.] Running applications inside containers is
-  the new trend over virtualization. Containerization outperform
-  virtualization in lightness and in the facilitation of the
-  application's packaging, shipping, and deployment. That's why cloud
-  platforms like K8's are built around this emerging concept, where
-  the benefits of containers also applies in fog computing
-  architecture.
+\item[Containerization.] Running applications inside containers is the
+  new trend over virtualization. Containerization outperform
+  virtualization in lightness and in the facilitation of application
+  packaging, shipping, and deployment. This the reason why cloud
+  platforms like Kubernetes are built around this concept, where the
+  benefits of containers also applies in fog computing architecture.
 
 \item[Deployment.] Kuberentes deployment is done using deployment
   controllers located in the master node, these controllers receives
@@ -306,22 +305,38 @@ cloud and fog computing environments.
 
 \subsection{Kubernetes Disadvantages}
 
-\begin{itemize}
-\item {\bf Centralization}
-K8's cluster is composed of master node and worker nodes, all the decision of the cluster are made by the master, and all the cluster controllers are located there. This imposes higher latencies when executing jobs like deploying a container, also heavy computations are done in the master node to take all the decision of the cluster.\change{rephrase!}  
+\begin{description}
+\item[Centralization.]  K8's cluster is composed of master node and
+  worker nodes, all the decision of the cluster are made by the
+  master, and all the cluster controllers are located there. This
+  imposes higher latencies when executing jobs like deploying a
+  container, also heavy computations are done in the master node to
+  take all the decision of the cluster.\change{rephrase!}
 
-\item{\bf Location awareness}
-The fact that K8's does not support location awareness is not shocking, since K8's is a cloud platform. Yet the location awareness is the number one characteristic of fog computing \cite{Bonomi:2012:FCR:2342509.2342513}. 
-The characteristic of location awareness is mainly required to allow the fog to trace the closest available resource, which will improve the latency.
+\item[Location awareness.]  The fact that K8's does not support
+  location awareness is not shocking, since K8's is a cloud
+  platform. Yet the location awareness is the number one
+  characteristic of fog
+  computing~\cite{Bonomi:2012:FCR:2342509.2342513}.  The
+  characteristic of location awareness is mainly required to allow the
+  fog to trace the closest available resource, which will improve the
+  latency.
 
-\item {\bf Load balancing}
-Load balancing in Kubernetes is limited to external load balancers used in the cloud providers, since the fog is definitely not built in the cloud provider hardware then now load balancing options are not available for the fog.\unsure{need to check more}
+\item[Load balancing.]  Load balancing in Kubernetes is limited to
+  external load balancers used in the cloud providers, since the fog
+  is definitely not built in the cloud provider hardware then now load
+  balancing options are not available for the fog.\unsure{need to
+    check more}
 
-\item {\bf Scheduling regardless the location}
-Neither the deployment of the containers, nor the scheduling of the incoming requests from the application users  is related to the location of the node. As a result we will end up by the jobs traversing more hops in the network before reaching the targeted nodes, which implies higher end-to-end latencies.\change{rephrase!}
+\item[Scheduling regardless the location.] Neither the deployment of
+  the containers, nor the scheduling of the incoming requests from the
+  application users is related to the location of the node. As a
+  result we will end up by the jobs traversing more hops in the
+  network before reaching the targeted nodes, which implies higher
+  end-to-end latencies.\change{rephrase!}
 
 
-\end{itemize}
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Roadmap Towards Fog-aware Kubernetes}\label{sec:road}
