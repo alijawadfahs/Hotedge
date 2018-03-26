@@ -226,22 +226,20 @@ the expected service. Such a set of pods can be made publicly
 accessible from external end users by creating a \emph{Service} which
 acts as a frontend for the group of pods.
 
-The master can schedule each pod in any worker node that has
-sufficient available resources. Since pods may be placed in different
-nodes, communication is established as follows:
+The master may schedule each pod in any worker node, by default chosen
+as the worker node with the lowest load in the system. Since pods may
+be placed in different nodes, communication is established as follows:
 
 \begin{itemize}
 \item Container-to-container communication within a pod is enabled
-  using Container Network
+  using the Container Network
   Interface\footnote{https://github.com/containernetworking/cni},
   which enables connectivity between containers within a single
   machine.
-\item Communication between the end users and the pods is ensured by
-  by the Kubernetes service together with a component called
-  \emph{kube-proxy} which also relies on \emph{iptables} to establish
-  communication.
+\item Communication between the pods is ensured a component called
+  \emph{kube-proxy} which relies on \emph{iptables} to establish the
+  appropriate routes.
 \end{itemize}
-
 
 \begin{figure}[t]
   \centering
@@ -256,12 +254,8 @@ pods. Whenever a pod is exposed, it takes a virtual IP address (called
 endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
-redirected to is determined based on 
-
-randomly by default. Alternatively one may
-decide to use a third-party load balancer. \notegp{Do we have examples
-  of such 3rd-party load balancers? Is there any location-aware one in
-  the list?}
+redirected to a load-balancing policy such as round-robin, source
+hashing, and shortest expected delay.
 
 \medskip In the next sections we discuss the strengths and weaknesses
 of this architecture in the specific case where one chooses to use
@@ -269,21 +263,45 @@ Kubernetes as the basis for a fog computing platforms.
 
 
 \subsection{Kubernetes Advantages}
-\begin{itemize}
 
-\item{\bf Community} 
-Since Kubernetes is an open-source software, it's surrounded by a large-scale community consists of thousands of contributors from the industrial and research field, meeting and events, and forms to file issues and ask questions.
-
-The support provided by this community ease the development of the software for everyone, where a number of features Kubernetes have today were developed by this community.  
-\item {\bf Distribution} 
-The fog architecture is based on wide distribution of plenty points of presence, spread over a geographical location. Kubernetes support building large clusters up to 5000 nodes and 150,000 pods, such support is ideal for fog distribution. 
-\item {\bf Scalability} As a result of supporting large clusters, Kubernetes had to simplify the procedure of scaling the cluster. Adding new nodes is as simple as running a join command, and the master node will take care of everything, without the need of the maintainer interference. 
+Kubernetes has a number of properties that make it a great platform in
+cloud and fog computing environments.
 
 
-\item {\bf Containerization} Running applications inside containers is the new trend over virtualization. Containerization outperform virtualization in lightness and in the facilitation of  the application's packaging, shipping, and deployment. That's why cloud platforms like K8's are built around this emerging concept, where the benefits of containers also applies in fog computing architecture.  
+\begin{description}
+\item[Distribution.] The fog architecture is based on wide distribution
+  of plenty points of presence, spread over a geographical
+  location. Kubernetes support building large clusters up to 5000
+  nodes and 150,000 pods, such support is ideal for fog distribution.
 
-\item {\bf Deployment} Kuberentes deployment is done using deployment controllers located in the master node, these controllers receives user's request for new deployments and interpret them in terms of pods. The user will monitor the pods as a deployment, and any failure of a pod or a node would be automatically resolved without a manual intervention. 
-\end{itemize}
+\item[Scalability.] As a result of supporting large clusters,
+  Kubernetes had to simplify the procedure of scaling the
+  cluster. Adding new nodes is as simple as running a join command,
+  and the master node will take care of everything, without the need
+  of the maintainer interference.
+
+\item[Containerization.] Running applications inside containers is
+  the new trend over virtualization. Containerization outperform
+  virtualization in lightness and in the facilitation of the
+  application's packaging, shipping, and deployment. That's why cloud
+  platforms like K8's are built around this emerging concept, where
+  the benefits of containers also applies in fog computing
+  architecture.
+
+\item[Deployment.] Kuberentes deployment is done using deployment
+  controllers located in the master node, these controllers receives
+  user's request for new deployments and interpret them in terms of
+  pods. The user will monitor the pods as a deployment, and any
+  failure of a pod or a node would be automatically resolved without a
+  manual intervention.
+
+\item[Community.] Kubernetes is surrounded by a large-scale community
+  consists of thousands of contributors from the industrial and
+  research field, meeting and events, and forms to file issues and ask
+  questions.  The support provided by this community eases the
+  development of the software for everyone, where a number of features
+  Kubernetes have today were developed by this community.
+\end{description}
 
 
 \subsection{Kubernetes Disadvantages}
