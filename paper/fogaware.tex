@@ -147,12 +147,12 @@ Rasperry PIs for example~\cite{vankempen:hal-01446483}.
 % containers offer over Virtual Machines.
 
 OpenStack++ is a set of OpenStack extensions that implements
-cloudlets, small-scale cloud data centers that are dispersed at the
+cloudlets: small-scale cloud data centers that are dispersed at the
 edge of the Internet~\cite{openstackplusplus}. A set of cloudlets may
 arguably be used to implement a fog platform. However, OpenStack++
-bases itself on VM technologies, which requires does not match our
-requirements for resource efficiency in the presence of large numbers
-of independent applications sharing the resources of modest computing
+bases itself on VM technologies, which does not match our requirements
+for resource efficiency in the presence of large numbers of
+independent applications sharing the resources of modest computing
 devices.
 
 PiCasso~\cite{picasso} is a container orchestration platform that
@@ -174,12 +174,11 @@ the next section in the specific case of Kubernetes.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kubernetes and Fog Computing}\label{sec:kube}
 
-We have chosen to base our efforts on Kubernetes.  In particular,
-Kubernetes offers many functionalities such as the concepts of pods
-and services, auto-scaling, and a clean separation between the
-applications and the underlying platform. It has also attracted a very
-large community of users and developers which position it as a highly
-mature platform. 
+We have chosen to base our efforts on Kubernetes.  In particular, it
+offers many functionalities such as the concepts of pods and services,
+auto-scaling, and a clean separation between the applications and the
+underlying platform. It has also attracted a very large community of
+users and developers which position it as a highly mature platform.
 
 However, Kubernetes was designed with cloud computing scenarios in
 mind. We briefly present its main architecture, and discuss its
@@ -198,38 +197,41 @@ of a fog computing platform.
 \end{figure}
 
 %paragraph linking
-Kubernetes is an open-source container-based platform, this platform
-manages the orchestration of the service instances. A Kubernetes
-cluster consist of one master node and worker nodes (see Figure
-\ref{fig:arch}), where a node does not necessarily refer to a physical
-machine, it can also be virtual. The master node is responsible for
-the management and monitoring of the cluster, where it contains the
-deployment controllers and the scheduler. Meanwhile, the worker nodes
-are the actual resources of the platform, they run the user
-application inside containers created by the master node.
+Kubernetes is an open-source container-based platform which can manage
+the deployment and orchestration of service instances over a
+large-scale computing infrastructure. As presented in
+Figure~\ref{fig:arch}, Kubernetes cluster consist of one master node
+and multiple worker nodes. The master node is responsible for
+monitoring and managing the cluster via a variety of control
+components such as the resource scheduler and the deployment
+controllers. Conversely, the worker nodes actually execute user
+applications inside containers according to instructions given by the
+master node.
 
-In the following paragraphs we will refer to the master node as master
-and the worker node as node.
+% In the following paragraphs we will refer to the master node as master
+% and the worker node as node.
 
 %pods.
 %deployment controllers.
-Kubernetes runs containers in the form of pods, where a pod is a group
-of one or more containers. If a pod is consisting of more than one
-container, those containers can communicate internally using an
-isolated network. The pods are created using a deployment controller,
-and here we have to mention that the user is responsible of creating
-the deployment not the pods themselves. Kubernetes is responsible for
-the creation and management of the associated pods.
+Kubernetes organizes containers in the form of pods, where a pod is a
+tight group of logically-related containers running in the same worker
+node. Containers which belong to a single pod can communicate with
+each other using an isolated private network. Pods are not usually
+created directly by the users. Rather, users are expected to create a
+deployment controller, which is in charge of the creation and
+management of one or more identical pods providing the expected
+service.
 
-The master can schedule the pods in any node that have sufficient
-resources. Since the Pods are placed in different nodes, the
+The master can schedule pods in any worker node that has sufficient
+available resources. Since pods may be scheduled in different nodes,
 pod-to-pod communication is not limited to localhost, at the same time
 the pods have to communicate with the end users, which leave us with
 two types of communications that are carried away using:
 
 \begin{itemize}
-	\item Software Defined Networking(SDN), for pod-to-pod communication.
-	\item Kube-proxy, which will create services (Iptables) that the user can use to access the pods. 
+\item Software Defined Networking (SDN), for pod-to-pod communication.
+\item Kube-proxy, which will create services (Iptables) that the user
+  can use to access the pods.
 \end{itemize}
 
 %services
