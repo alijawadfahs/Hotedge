@@ -12,6 +12,13 @@
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \setlength{\marginparwidth}{2cm}
+\usepackage{xcolor}
+\newcommand{\note}[1]{\noindent{\color{red}\textbf{#1}}}
+\definecolor{jazzberryjam}{rgb}{0.65, 0.04, 0.37}
+\definecolor{ultramarine}{rgb}{0.07, 0.04, 0.56}
+\newcommand{\notegp}[1]{\note{\color{jazzberryjam}[\textsc{Guillaume:} #1]}}
+\newcommand{\noteaa}[1]{\note{\color{ultramarine}[\textsc{Arif:} #1]}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[none]{hyphenat}
 \let\origref\ref
@@ -21,7 +28,7 @@
 \usepackage{url}
 \usepackage{hyperref}
 
-
+\clubpenalty=10000 \widowpenalty=10000 \displaywidowpenalty=10000
 
 
 
@@ -213,39 +220,32 @@ master node.
 
 %pods.
 %deployment controllers.
-Kubernetes organizes containers in the form of pods, where a pod is a
-tight group of logically-related containers running in the same worker
-node. Containers which belong to a single pod can communicate with
-each other using an isolated private network. Pods are not usually
-created directly by the users. Rather, users are expected to create a
-deployment controller, which is in charge of the creation and
-management of one or more identical pods providing the expected
-service.
+Kubernetes organizes containers in the form of \emph{Pods}, where a
+pod is a tight group of logically-related containers running in a
+single worker node. Containers which belong to a single pod can
+communicate with each other using an isolated private network. Pods
+are not usually managed directly by the users. Rather, users are
+expected to create a \emph{Deployment Controller}, which is in charge
+of the creation and management of one or more identical pods providing
+the expected service. Such a set of pods can be made publicly
+accessible from external end users by creating a \emph{Service} which
+acts as a load-balancer between the pods.
 
-The master can schedule pods in any worker node that has sufficient
-available resources. Since pods may be scheduled in different nodes,
-pod-to-pod communication is not limited to localhost, at the same time
-the pods have to communicate with the end users, which leave us with
-two types of communications that are carried away using:
+The master can schedule each pod in any worker node that has
+sufficient available resources. Since pods may be placed in different
+nodes, communication is established as follows:
 
 \begin{itemize}
-\item Software Defined Networking (SDN), for pod-to-pod communication.
-\item Kube-proxy, which will create services (Iptables) that the user
-  can use to access the pods.
+\item Pod-to-pod communication is enabled using Software Defined
+  Networking (SDN) \notegp{I presume this means creating a separate
+    VPN for the pods which will be implemented using
+    IPtables. Correct?}
+\item Communication between the end users and the pods is ensured by
+  by the Kubernetes service together with a component called
+  \emph{kube-proxy} which also relies on iptables to establish
+  communication.
 \end{itemize}
 
-%services
-The main purpose of the service is connecting the users to exposed
-pods (see Figure \ref{fig:svc}), by redirecting them to an available
-pod. Whenever a pod is exposed, it will take a virtual Ip address
-(called endpoint), and the service will play the role of broker to
-assign the user's requests to an available pod through this
-endpoint. Nonetheless, the selection of the pod is done in a random
-way, or in best cases using a third-party load balancer. The usage of
-services is essential in the case of replications, where a pod have
-one or more replicas. As in figure \ref{fig:svc} those replicas are
-distinguished using a label, where the services use this label to
-connect the user to any of these pods.
 
 \begin{figure}[t]
   \centering
@@ -254,7 +254,21 @@ connect the user to any of these pods.
   \label{fig:svc}
 \end{figure}
 
-While building our own test-bed cluster and running K8's on top of it, and by looking deeper in the code, we have spotted some of the advantages and disadvantages for running K8's for the fog, that will be tackled in the next paragraphs.
+As illustrated in Figure~\ref{fig:svc}, the main purpose of a
+Kubernetes service is to connect end users to the exposed
+pods. Whenever a pod is exposed, it takes a virtual IP address (called
+endpoint) and receives a label (Label X in the figure). The Service
+then acts as a load balancer between all the registered pods with the
+chosen label. The selection of the pod an end user request gets
+redirected to is determined randomly by default. Alternatively one may
+decide to use a third-party load balancer. \notegp{Do we have examples
+  of such 3rd-party load balancers? Is there any location-aware one in
+  the list?}
+
+\medskip In the next sections we discuss the strengths and weaknesses
+of this architecture in the specific case where one chooses to use
+Kubernetes as the basis for a fog computing platforms.
+
 
 \subsection{Kubernetes Advantages}
 \begin{itemize}
