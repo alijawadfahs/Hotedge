@@ -215,11 +215,6 @@ controllers. Conversely, the worker nodes actually execute user
 applications inside containers according to instructions given by the
 master node.
 
-% In the following paragraphs we will refer to the master node as master
-% and the worker node as node.
-
-%pods.
-%deployment controllers.
 Kubernetes organizes containers in the form of \emph{Pods}, where a
 pod is a tight group of logically-related containers running in a
 single worker node. Containers which belong to a single pod can
@@ -229,20 +224,21 @@ expected to create a \emph{Deployment Controller}, which is in charge
 of the creation and management of one or more identical pods providing
 the expected service. Such a set of pods can be made publicly
 accessible from external end users by creating a \emph{Service} which
-acts as a load-balancer between the pods.
+acts as a frontend for the group of pods.
 
 The master can schedule each pod in any worker node that has
 sufficient available resources. Since pods may be placed in different
 nodes, communication is established as follows:
 
 \begin{itemize}
-\item Pod-to-pod communication is enabled using Software Defined
-  Networking (SDN) \notegp{I presume this means creating a separate
-    VPN for the pods which will be implemented using
-    IPtables. Correct?}
+\item Container-to-container communication within a pod is enabled
+  using Container Network
+  Interface\footnote{https://github.com/containernetworking/cni},
+  which enables connectivity between containers within a single
+  machine.
 \item Communication between the end users and the pods is ensured by
   by the Kubernetes service together with a component called
-  \emph{kube-proxy} which also relies on iptables to establish
+  \emph{kube-proxy} which also relies on \emph{iptables} to establish
   communication.
 \end{itemize}
 
@@ -260,7 +256,9 @@ pods. Whenever a pod is exposed, it takes a virtual IP address (called
 endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
-redirected to is determined randomly by default. Alternatively one may
+redirected to is determined based on 
+
+randomly by default. Alternatively one may
 decide to use a third-party load balancer. \notegp{Do we have examples
   of such 3rd-party load balancers? Is there any location-aware one in
   the list?}
