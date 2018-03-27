@@ -457,18 +457,30 @@ boils down to local network tricks + adjusting the load-balancing
 strategy. We may think of redirecting traffic based on nodes' GPS
 coordinates (to minimize the physical distance), Vivaldi
 coordinates~\cite{vivaldi} (to minimize the network latency), etc.
+\rm
 
 \subsection{Location-aware scheduling}
 
-When creating a new pod the scheduler should know about the end-user
-locations (approximated by the locations of gateways they are
-connected to). Then we can use latency-driven replica
-placement~\cite{szymaniak2006}. It's a dynamic system so it may be
-useful to adapt the auto-scaler (or to design an entirely new
-controller) that periodically estimates how efficient the current
-replica placement is, and initiates adjustments if necessary.
+When creating a new pod, the Kubernetes scheduler should use knowledge
+about the end-users' locations as well as the available resources in
+each worker node to determine in which node the new pod will be most
+useful. Kubernetes already monitors the nodes' load, but it will be
+necessary to add user location monitoring. In our case a user's
+location may be approximated by the location of the Wi-Fi gateway it
+is using to access the system. If every worker node is attached to a 
+Vivaldi coordinates, then determining the optimal pod placement can be
+reduced to a geometric problem~\cite{szymaniak2006}.
 
-Longer-term goal: decentralizing the scheduler itself.
+However, we must also anticipate that users may be be mobile and that
+the workload imposed on each pod will significantly vary over time. It
+will probably become necessary to adapt the Kubernetes auto-scaler or
+to design an entirely new controller to periodically estimate how
+efficient the current replica placement is, and to initiate
+adjustments when necessary.
+
+
+
+\emph{Longer-term goal: decentralizing the scheduler itself.}
 
 % The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
