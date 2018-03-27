@@ -88,7 +88,7 @@ An essential requirement for a fog computing platform is therefore to
 take the location of fog resources and end-user devices into account
 to ensure proximity between the two. However, most platforms available
 today such as OpenStack, Docker Swarm, Mesos and Kubernetes were
-initially designed with datacenter deployments in mind and therefore
+initially designed with data center deployments in mind and therefore
 often do not provide location awareness in their resource scheduling
 and/or load balancing algorithms.
 
@@ -125,7 +125,7 @@ scenarios.
 
 
 %Explain organization of the report, what is included, and what is not.
-This paper is organised as follows. In Section~\ref{sec:plat}, we
+This paper is organized as follows. In Section~\ref{sec:plat}, we
 discuss the state of the art. In Section~\ref{sec:kube}, we introduce
 Kubernetes as a platform, discuss its advantages and disadvantages in
 the context of fog computing platform. In Section~\ref{sec:road}, we
@@ -201,7 +201,7 @@ of a fog computing platform.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{images/arch.png}
-  \caption{Kubernetes architecture} 
+  \caption{Kubernetes architecture.} 
   \label{fig:arch}
 \end{figure}
 
@@ -226,7 +226,9 @@ expected to create a \emph{Deployment Controller}, which is in charge
 of the creation and management of one or more identical pods providing
 the expected service. Such a set of pods can be made publicly
 accessible from external end users by creating a \emph{Service} which
-acts as a frontend for the group of pods.\noteaf{frontend or front-end?}
+acts as a front end for the group of pods.
+%\noteaf{frontend or front-end?}
+%\notegp{actually: front end :-) \url{https://en.wikipedia.org/wiki/Front_and_back_ends}}
 
 The master may schedule each pod in any worker node, by default chosen
 as the worker node with the lowest load in the system. Since pods may
@@ -244,7 +246,7 @@ be placed in different nodes, communication is established as follows:
 \begin{figure}[t]
   \centering
   \includegraphics[width=.9\linewidth]{images/svc.png}
-  \caption{Organization of a Kubernetes service}
+  \caption{Organization of a Kubernetes service.}
   \label{fig:svc}
 \end{figure}
 
@@ -255,7 +257,7 @@ endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
 redirected to is driven by a load-balancing policy such as random,
-round-robin, source hashing, and shortest expected delay.\noteaf{ The load balancing part}
+round-robin, source hashing, and shortest expected delay.
 
 \medskip In the next sections we discuss the strengths and weaknesses
 of this architecture in the specific case where one chooses to use
@@ -291,7 +293,7 @@ cloud as well as fog computing environments.
   where the system continuously monitors itself in order to react to
   any discrepancy between the actual and the desired system
   state. This makes Kubernetes extremely robust in face of various
-  types of failures and misbehaviours that are due to be even more
+  types of failures and misbehaviors that are due to be even more
   frequent in a decentralized fog architecture than a datacenter-based
   cloud.
 
@@ -361,14 +363,18 @@ processes.
 
 
 To illustrate the need for location-awareness, we deployed a small
-testbed \noteaf{testbed or test-bed?}composed of three Raspberry Pi~3 nodes running Kubernetes v1.9. As illustrated in Figure~\ref{fig:clus}, one
-of these nodes acts as the cluster's master node while the other two
-are considered as worker nodes. The worker nodes also act as Wi-Fi
-gateways so the end users may connect to the closest worker node with
-a 1-hop Wi-Fi connection. The master and worker nodes are connected to
-each other using a 1\,Gbps Ethernet local-area network\footnote{The
-  local-area network infrastructure guarantees a 1\,Gbps capacity
-  although the Ethernet interface of the Raspberry Pi~3 only supports
+testbed
+%\noteaf{testbed or test-bed?}
+%\notegp{testbed: \url{https://en.wikipedia.org/wiki/Testbed}}
+composed of three Raspberry Pi~3 nodes running Kubernetes v1.9. As
+illustrated in Figure~\ref{fig:clus}, one of these nodes acts as the
+cluster's master node while the other two are considered as worker
+nodes. The worker nodes also act as Wi-Fi gateways so the end users
+may connect to the closest worker node with a 1-hop Wi-Fi
+connection. The master and worker nodes are connected to each other
+using a 1\,Gbps Ethernet local-area network\footnote{The local-area
+  network infrastructure guarantees a 1\,Gbps capacity although the
+  Ethernet interface of the Raspberry Pi~3 only supports
   10/100\,Mbps. This means that the network infrastructure will not
   impose additional bottlenecks besides the limitations of the
   Raspberry Pi hardware.}.
@@ -392,8 +398,8 @@ each other using a 1\,Gbps Ethernet local-area network\footnote{The
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=.9\linewidth]{images/graph.png}
-  \caption{Round-trip Latencies}
+  \includegraphics[width=\linewidth]{images/graph.png}
+  \caption{Round-trip latencies.}
   \label{fig:lat}
 \end{figure}
 
@@ -444,19 +450,51 @@ networks, we expect these differences to be at least as large.
 \subsection{How Kubernetes routes requests to pods (and how to improve
   it)}
 
-\it
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{images/ing.png}
+  \caption{Communication between pods and external end users.}
+  \label{fig:ing}
+\end{figure}
 
-In normal settings: one or more ingress points + any standard solution
-to direct end-user traffic to one ingress point (e.g., DNS). Then, one
-of the standard load-balancing policies to determine which pod to
-route traffic to.
+Figure~\ref{fig:ing} details the way an external end user's requests
+get routed toward one of the pods providing the requested service. In
+a standard cloud scenario, the system administrator needs to setup an
+\emph{Ingress} (on a public IP address usually registered using DNS)
+which exposes the service to the outside world. The Ingress merely
+forwards traffic to the appropriate Service on the same node, which in
+turn decides to which pod the request should be routed to.
 
-In our fog archi: every node is in fact an ingress point. So this
-boils down to local network tricks + adjusting the load-balancing
-strategy. We may think of redirecting traffic based on nodes' GPS
-coordinates (to minimize the physical distance), Vivaldi
-coordinates~\cite{vivaldi} (to minimize the network latency), etc.
-\rm
+In the fog computing scenario depicted on the bottom half of the
+figure, it is no longer necessary to rely on a specific
+Ingress. Instead, since the end users connect directly to one of the
+worker nodes, their requests immediately enter the Kubernetes cluster
+without the need to link the external Internet with the internal
+Kubernetes system. In Kubernetes, every worker node can access the
+Service and make request-routing decisions locally.
+
+The default load-balancing policy randomly distributes requests among
+pods. This is obviously sub-optimal in the case of fog computing, as
+for example a worker node which contains a pod of some service may
+redirect requests to another pod instead of servicing the request
+itself. We therefore plan to design new location-aware load-balancing
+policies that will aim at routing traffic to a nearby pod. The
+decision may be based on nodes' GPS coordinates (if we want to
+minimize the geographical distance) or Vivaldi
+coordinates~\cite{vivaldi} (if we want to minimize the network
+latency).
+
+% In normal settings: one or more ingress points + any standard solution
+% to direct end-user traffic to one ingress point (e.g., DNS). Then, one
+% of the standard load-balancing policies to determine which pod to
+% route traffic to.
+
+% In our fog archi: every node is in fact an ingress point. So this
+% boils down to local network tricks + adjusting the load-balancing
+% strategy. We may think of redirecting traffic based on nodes' GPS
+% coordinates (to minimize the physical distance), Vivaldi
+% coordinates~\cite{vivaldi} (to minimize the network latency), etc.
+% \rm
 
 \subsection{Location-aware scheduling}
 
@@ -477,9 +515,14 @@ to design an entirely new controller to periodically estimate how
 efficient the current replica placement is, and to initiate
 adjustments when necessary.
 
+A longer-term goal may also be to decentralize the scheduling process
+itself. In a fog computing environment, the resources to be scheduled
+are usually located very close from the process which requested their
+creation. In this context it might make sense to avoid using a
+centralized scheduling component, and to rather let the nearby worker
+nodes self-organize to allocate their available resources according to
+local demands.
 
-
-\emph{Longer-term goal: decentralizing the scheduler itself.}
 
 % The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
@@ -519,13 +562,22 @@ adjustments when necessary.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}\label{sec:conclusion}
 
-In this paper, we have targeted the challenges the fog have nowadays,
-the lack of a fully compatible platforms, and the need to add some key
-elements to the currently available platforms. We have added the
-motivation to update Kuberenetes to support the fog needs throughout
-running our own cluster and tackling the main issues we face. Finally,
-we have proposed our vision for the upcoming steps, that will be our
-next objective.
+Fog and cloud computing platforms share many identical concerns, which
+makes it attractive to use mature cloud computing platforms to build
+new fog computing platforms. However, this requires a number of
+adjustments in particular to support location-awareness. We have
+chosen Kubernetes as the basis for our work, and proposed a roadmap of
+the necessary adjustments before it can realistically be considered as
+the world's best fog computing platform.
+
+
+% In this paper, we have targeted the challenges the fog have nowadays,
+% the lack of a fully compatible platforms, and the need to add some key
+% elements to the currently available platforms. We have added the
+% motivation to update Kuberenetes to support the fog needs throughout
+% running our own cluster and tackling the main issues we face. Finally,
+% we have proposed our vision for the upcoming steps, that will be our
+% next objective.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acknowledgments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Acknowledgments} 
