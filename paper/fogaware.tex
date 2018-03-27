@@ -471,7 +471,7 @@ Ingress. Instead, since the end users connect directly to one of the
 worker nodes, their requests immediately enter the Kubernetes cluster
 without the need to link the external Internet with the internal
 Kubernetes system. In Kubernetes, every worker node can access the
-Service and make request-routing decisions locally.
+service and make request-routing decisions locally.
 
 The default load-balancing policy randomly distributes requests among
 pods. This is obviously sub-optimal in the case of fog computing, as
@@ -508,7 +508,7 @@ is using to access the system. If every worker node is attached to a
 Vivaldi coordinates, then determining the optimal pod placement can be
 reduced to a geometric problem~\cite{szymaniak2006}.
 
-However, we must also anticipate that users may be be mobile and that
+However, we must also anticipate that users may be mobile and that
 the workload imposed on each pod will significantly vary over time. It
 will probably become necessary to adapt the Kubernetes auto-scaler or
 to design an entirely new controller to periodically estimate how
