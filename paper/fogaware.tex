@@ -27,6 +27,7 @@
 \usepackage{rotating}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{enumitem}
 
 \clubpenalty=10000 \widowpenalty=10000 \displaywidowpenalty=10000
 
@@ -179,7 +180,7 @@ the next section in the specific case of Kubernetes.
 
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kubernetes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Kubernetes and Fog Computing}\label{sec:kube}
+\section{Kubernetes and fog computing}\label{sec:kube}
 
 We have chosen to base our efforts on Kubernetes.  In particular, it
 offers many functionalities such as the concepts of pods and services,
@@ -194,7 +195,7 @@ of a fog computing platform.
 
 
 
-\subsection{Kubernetes Architecture}
+\subsection{Kubernetes architecture}
 
 \begin{figure}[t]
   \centering
@@ -231,14 +232,12 @@ as the worker node with the lowest load in the system. Since pods may
 be placed in different nodes, communication is established as follows:
 
 \begin{itemize}
-\item Container-to-container communication within a pod is enabled
-  using the Container Network
+\item Pod-to-pod communication is enabled using the Container Network
   Interface\footnote{\url{https://github.com/containernetworking/cni}},
-  which enables connectivity between containers within a single
-  machine.\noteaf{Container to container communication is done in the localhost or by sharing a resource  of the Pod, however the Pod to Pod communication uses the CNI for communication which's not limited to single node. \url{https://kubernetes.io/docs/concepts/workloads/pods/pod}}
-\item Communication between the pods is ensured a component called
-  \emph{kube-proxy} which relies on \emph{iptables} to establish the
-  appropriate routes.
+  which enables connectivity within the Kubernetes platform.
+\item Communication between the pods and the external world is ensured
+  by the Service using a component called \emph{kube-proxy} which
+  relies on \emph{iptables} to establish the appropriate routes.
 \end{itemize}
 
 \begin{figure}[t]
@@ -254,15 +253,15 @@ pods. Whenever a pod is exposed, it takes a virtual IP address (called
 endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
-redirected to a load-balancing policy such as round-robin, source
-hashing, and shortest expected delay.
+redirected to is driven by a load-balancing policy such as
+round-robin, source hashing, and shortest expected delay.
 
 \medskip In the next sections we discuss the strengths and weaknesses
 of this architecture in the specific case where one chooses to use
-Kubernetes as the basis for a fog computing platforms.
+Kubernetes as the basis for a fog computing platform.
 
 
-\subsection{Kubernetes Advantages}
+\subsection{Advantages}
 
 Kubernetes has a number of properties that make it a great platform in
 cloud as well as fog computing environments.
@@ -280,19 +279,20 @@ cloud as well as fog computing environments.
   join command, and the master node will take care of everything,
   without the need of manual intervention.
 
-\item[Containerization.] Running applications inside containers is the
-  new trend over virtualization. Containerization outperform
-  virtualization in lightness and in the facilitation of application
-  packaging, shipping, and deployment. This the reason why cloud
-  platforms like Kubernetes are built around this concept, where the
-  benefits of containers also applies in fog computing architecture.
+\item[Containerization.] In a fog computing environment we expect to
+  simultaneously execute large numbers of pods on modest-sized
+  machines. It is therefore important to minimize the overheads due to
+  the virtualization technologies. THe fact that Kubernetes relies on
+  containers rather than virtual machines significantly reduces this
+  overhead, in particular with respect to memory usage.
 
-\item[Deployment.] Kuberentes deployment is done using deployment
-  controllers located in the master node, these controllers receives
-  user's request for new deployments and interpret them in terms of
-  pods. The user will monitor the pods as a deployment, and any
-  failure of a pod or a node would be automatically resolved without a
-  manual intervention.
+\item[Robustness.] Kubernetes relies on control-theory principles
+  where the system continuously monitors itself in order to react to
+  any discrepancy between the actual and the desired system
+  state. This makes Kubernetes extremely robust in face of various
+  types of failures and misbehaviors that are due to be even more
+  frequent in a decentralized fog architecture than a datacenter-based
+  cloud.
 
 \item[Community.] Kubernetes is surrounded by a large-scale community
   consists of thousands of contributors from the industrial and
@@ -303,53 +303,63 @@ cloud as well as fog computing environments.
 \end{description}
 
 
-\subsection{Kubernetes Disadvantages}
+\subsection{Limitations}
+
+Despite its many qualities, Kubernetes was not designed with fog
+computing in mind. It therefore has a number of limitations that make
+it difficult to use out of the box for fog computing environments.
 
 \begin{description}
-\item[Centralization.]  K8's cluster is composed of master node and
-  worker nodes, all the decision of the cluster are made by the
-  master, and all the cluster controllers are located there. This
-  imposes higher latencies when executing jobs like deploying a
-  container, also heavy computations are done in the master node to
-  take all the decision of the cluster.\change{rephrase!}
+\item[Centralization.] A Kubernetes cluster is composed of one master
+  node and a number of worker nodes. In this design, all important
+  management decisions are made by the master. In particular, most of
+  the cluster controllers are located there. In a fog computing
+  environment where the worker nodes may be located far from the
+  master this increases the latency of all the control operations
+  performed by the master over some of the worker nodes.
 
-\item[Location awareness.]  The fact that K8's does not support
-  location awareness is not shocking, since K8's is a cloud
-  platform. Yet the location awareness is the number one
-  characteristic of fog
-  computing~\cite{Bonomi:2012:FCR:2342509.2342513}.  The
-  characteristic of location awareness is mainly required to allow the
-  fog to trace the closest available resource, which will improve the
-  latency.
+\item[Location unawareness.]  The purpose of a fog computing platform
+  is to exploit the proximity between the platform resources and the
+  end users~\cite{Bonomi:2012:FCR:2342509.2342513}. However,
+  Kubernetes was designed with the hypothesis that all available
+  resources are equally suited to serve any user. Although this
+  hypothesis is very sensible in cloud scenarios, it introduces
+  significant limitations in a fog context.
 
-\item[Load balancing.]  Load balancing in Kubernetes is limited to
-  external load balancers used in the cloud providers, since the fog
-  is definitely not built in the cloud provider hardware then now load
-  balancing options are not available for the fog.\unsure{need to
-    check more}
-
-\item[Scheduling regardless the location.] Neither the deployment of
-  the containers, nor the scheduling of the incoming requests from the
-  application users is related to the location of the node. As a
-  result we will end up by the jobs traversing more hops in the
-  network before reaching the targeted nodes, which implies higher
-  end-to-end latencies.\change{rephrase!}
-
-
+  \begin{itemize}[leftmargin=*,itemsep=0pt,topsep=-5pt,labelsep=8pt]
+  \item \emph{Pod scheduling:} When creating a new pod, the Kubernetes
+    scheduler does not take the end user locations into account to
+    determine which worker node should execute the new pod. As a
+    result, the pods which consitute a service maybe located further
+    away than necessary from the end users they are serving.
+  \item \emph{Load balancing:} Even though the end users may be
+    located in close vicinity of a pod providing the requested
+    service, simple load-balancing policies such as round-robin may
+    direct user requests to other pods located at much gerater
+    distance. It is therefore necessary to also adjust the way user
+    requests are routed to the appropriate pod.
+  \end{itemize}
 \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Roadmap Towards Fog-aware Kubernetes}\label{sec:road}
+\section{A roadmap towards fog-aware Kubernetes}\label{sec:road}
 
 Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{Bonomi:2012:FCR:2342509.2342513}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
 
 Kubernetes code\footnote{\url{https://github.com/kubernetes/kubernetes}} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
  
-\subsection{Location Awareness}
+\subsection{Location awareness}
 
 The K8's pods are described by the node that they are running on, and labels that are used as service selectors. As mentioned previously nothing in the pod will reflect the location, same applies for the location of the node. 
 
 What we need to point out is the method K8's use to select one of the replicated pods, since in clouds the node are most likely homogeneous then the pod will be selected randomly, or in best case scenarios using a load balancer, which works normally for the cloud architecture, however this is not the case for the fog. The main thing that defines the nodes in the fog is the distribution, and the fact that each user can have a node in his proximity. A fog-aware platform should be able to identify this node and take advantages of it. 
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/clus.png}
+  \caption{Testbed topology}
+  \label{fig:clus}
+\end{figure}
 
 To test the effect of randomness on the end-to-end latencies,and using our cluster we have created a small web application, this web application have 2 replicas located in 2 different nodes. Figure \ref{fig:clus} demonstrates the topology of the nodes, in which the end user is connected to node 1 through Wifi hotspot.
 
@@ -360,15 +370,12 @@ The end user will communicate with the service to be redirected to the web appli
 \end{itemize}
  
  
-\begin{figure}[th]
-\centering\includegraphics[width=0.4\textwidth]{images/clus.png}
-\caption{Test topology}
-\label{fig:clus}
-\end{figure}
-\begin{figure}[th]
-\centering\includegraphics[width=0.53\textwidth]{images/graph.png}
-\caption{Round-trip Latencies}
-\label{fig:lat}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/graph.png}
+  \caption{Round-trip Latencies}
+  \label{fig:lat}
 \end{figure}
 
 %\begin{table}[h]
@@ -395,10 +402,11 @@ We have collected the round-trip latency for each of the pods by sending UDP pac
 
 The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure \ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
-\begin{figure}[th]
-\centering\includegraphics[width=.5\textwidth]{images/dep.png}
-\caption{Pod deployments}
-\label{fig:dep}
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/dep.png}
+  \caption{Pod deployments}
+  \label{fig:dep}
 \end{figure}
 
 
