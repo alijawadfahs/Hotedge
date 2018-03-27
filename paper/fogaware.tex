@@ -443,26 +443,50 @@ differences to be at least as large.
 
 % We have collected the round-trip latency for each of the pods by sending UDP packets with different sizes over 1000 times for each test. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Figure \ref{fig:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. Further more the experiment have demonstrated that the optimal pod is less affected by the packet size compared to the geographically far pod. 
 
-\subsection{How Kubernetes routes requests to pods (and what to do
-  about it)}
+\subsection{How Kubernetes routes requests to pods (and how to improve
+  it)}
 
 \it
-The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=.9\linewidth]{images/dep.png}
-  \caption{Pod deployments}
-  \label{fig:dep}
-\end{figure}
+In normal settings: one or more ingress points + any standard solution
+to direct end-user traffic to one ingress point (e.g., DNS). Then, one
+of the standard load-balancing policies to determine which pod to
+route traffic to.
+
+In our fog archi: every node is in fact an ingress point. So this
+boils down to local network tricks + adjusting the load-balancing
+strategy. We may think of redirecting traffic based on nodes' GPS
+coordinates (to minimize the physical distance), Vivaldi
+coordinates~\cite{vivaldi} (to minimize the network latency), etc.
+
+\subsection{Location-aware scheduling}
+
+When creating a new pod the scheduler should know about the end-user
+locations (approximated by the locations of gateways they are
+connected to). Then we can use latency-driven replica
+placement~\cite{szymaniak2006}. It's a dynamic system so it may be
+useful to adapt the auto-scaler (or to design an entirely new
+controller) that periodically estimates how efficient the current
+replica placement is, and initiates adjustments if necessary.
+
+Longer-term goal: decentralizing the scheduler itself.
+
+% The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
+
+% \begin{figure}[tbp]
+%   \centering
+%   \includegraphics[width=.9\linewidth]{images/dep.png}
+%   \caption{Pod deployments}
+%   \label{fig:dep}
+% \end{figure}
 
 
-The steps that have to be taken should include adding a new measure that describe the K8's nodes, this measure would give us the exact location of the node by using GPS for example, or this measure will give us a great estimation of the location.\unsure{what you think about the measure that have to be used!}. 
-The second step toward location awareness is creating a new service type that will take the location of the node as a measure for the end user's jobs scheduling in addition of the load balancing alone.\change{add the code of the clusterIP}
+% The steps that have to be taken should include adding a new measure that describe the K8's nodes, this measure would give us the exact location of the node by using GPS for example, or this measure will give us a great estimation of the location.\unsure{what you think about the measure that have to be used!}. 
+% The second step toward location awareness is creating a new service type that will take the location of the node as a measure for the end user's jobs scheduling in addition of the load balancing alone.\change{add the code of the clusterIP}
 
-Also the location should be considered in the deployment policy of the pods. Imagine a cluster that have 100 nodes, and the maintainer would like to implement an application that have 4 replications, the location of each of those pods is essential, since locating the four of them is the proximity of each others will induce higher latencies for the far nodes, the best solution would be locating them in a way that covers the 100 nodes as equally as possible. 
+% Also the location should be considered in the deployment policy of the pods. Imagine a cluster that have 100 nodes, and the maintainer would like to implement an application that have 4 replications, the location of each of those pods is essential, since locating the four of them is the proximity of each others will induce higher latencies for the far nodes, the best solution would be locating them in a way that covers the 100 nodes as equally as possible. 
 
-Both of the previously mentioned steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
+% Both of the previously mentioned steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
 
 %\subsection{Scheduler Decentralization}
 
