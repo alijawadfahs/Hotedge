@@ -342,17 +342,15 @@ it difficult to use out of the box for fog computing environments.
 \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A roadmap towards fog-aware Kubernetes}\label{sec:road}
+\section{Making Kubernetes location-aware}\label{sec:road}
 
-Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{bonomi2014}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
+We believe that the most important limitation that needs to be
+addressed is to make Kubernetes location-aware as location-awareness
+is the prime goal of any fog computing platform. A longer-term
+objective will be to decentralize some of the platform's control
+processes.
 
-Kubernetes code\footnote{\url{https://github.com/kubernetes/kubernetes}} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
- 
-\subsection{Location awareness}
-
-The K8's pods are described by the node that they are running on, and labels that are used as service selectors. As mentioned previously nothing in the pod will reflect the location, same applies for the location of the node. 
-
-What we need to point out is the method K8's use to select one of the replicated pods, since in clouds the node are most likely homogeneous then the pod will be selected randomly, or in best case scenarios using a load balancer, which works normally for the cloud architecture, however this is not the case for the fog. The main thing that defines the nodes in the fog is the distribution, and the fact that each user can have a node in his proximity. A fog-aware platform should be able to identify this node and take advantages of it. 
+\subsection{Illustrating the need for location awareness}
 
 \begin{figure}[tbp]
   \centering
@@ -361,14 +359,36 @@ What we need to point out is the method K8's use to select one of the replicated
   \label{fig:clus}
 \end{figure}
 
-To test the effect of randomness on the end-to-end latencies,and using our cluster we have created a small web application, this web application have 2 replicas located in 2 different nodes. Figure \ref{fig:clus} demonstrates the topology of the nodes, in which the end user is connected to node 1 through Wifi hotspot.
 
-The end user will communicate with the service to be redirected to the web application pod, in this case we have 2 possibilities: 
-\begin{itemize}
-\item Pod 1, where the packets will pass by one network hop to reach the pod. 
-\item Pod 2, where the packets have to traverse the infrastructure to reach the pod.
-\end{itemize}
+To illustrate the need for location-awareness, we deployed a small
+testbed composed of three Raspberry PI~3 nodes running Kubernetes
+\notegp{which version?}. As illustrated in Figure~\ref{fig:clus}, one
+of these nodes acts as the cluster's master node while the other two
+are considered as worker nodes. The worker nodes also act as WiFi
+gateways so the end users may connect to the closest worker node with
+a 1-hop WiFi connection. The master and worker nodes are connected to
+each other using a 1\,Gbps Ethernet local-area network\footnote{The
+  local-area network infrastructure garantees a 1\,Gbps capacity
+  although the Ethernet interface of the Raspberry PI~3 only supports
+  10/100\,Mbps. This places the inter-node communication in the best
+  possible scenario, given the limitations of the Raspberry PI
+  hardware.}.
+
+% Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{bonomi2014}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
+
+% Kubernetes code\footnote{\url{https://github.com/kubernetes/kubernetes}} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
  
+% \subsection{Location awareness}
+
+% The K8's pods are described by the node that they are running on, and labels that are used as service selectors. As mentioned previously nothing in the pod will reflect the location, same applies for the location of the node. 
+
+% What we need to point out is the method K8's use to select one of the replicated pods, since in clouds the node are most likely homogeneous then the pod will be selected randomly, or in best case scenarios using a load balancer, which works normally for the cloud architecture, however this is not the case for the fog. The main thing that defines the nodes in the fog is the distribution, and the fact that each user can have a node in his proximity. A fog-aware platform should be able to identify this node and take advantages of it. 
+
+
+
+% To test the effect of randomness on the end-to-end latencies,and using our cluster we have created a small web application, this web application have 2 replicas located in 2 different nodes. Figure \ref{fig:clus} demonstrates the topology of the nodes, in which the end user is connected to node 1 through Wifi hotspot.
+
+% The end user will communicate with the service to be redirected to the web application pod, in this case we have 2 possibilities: 
  
 
 \begin{figure}[tbp]
@@ -377,6 +397,30 @@ The end user will communicate with the service to be redirected to the web appli
   \caption{Round-trip Latencies}
   \label{fig:lat}
 \end{figure}
+
+Figure~\ref{fig:lat} shows the round-trip time of UDP packets
+\notegp{UDP, really?} between the end user and the two pods running
+identical Web applications:
+
+\begin{itemize}
+\item When accessing Pod 1, the packets need to traverse only one WiFi
+  network hop to reach the pod.
+\item When accessing Pod 2, the packets need to traverse one WiFi
+  network hop plus one extra Ethernet network hop.
+\end{itemize}
+
+Clearly, reducing the network path between the end user and the pod
+which provides her with services significantly reduces the round-trip
+time latencies. The difference grows even bigger when the packet size
+increases. 
+
+In this case, we believe that the main source of additional latency
+when routing a message through a 2-hop network path largely resides in
+the context switching and delays in accessing the local network
+interface in the Raspberry PI which routes traffic between the end
+user and the service pod. In a larger fog computing environment where
+nodes may be connected to various commodity networks, we expect these
+differences to be at least as large.
 
 %\begin{table}[h]
 %\begin{center}
@@ -397,10 +441,13 @@ The end user will communicate with the service to be redirected to the web appli
 %\end{center}
 %\end{table}
 
-We have collected the round-trip latency for each of the pods by sending UDP packets with different sizes over 1000 times for each test. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Figure \ref{fig:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. Further more the experiment have demonstrated that the optimal pod is less affected by the packet size compared to the geographically far pod. 
+% We have collected the round-trip latency for each of the pods by sending UDP packets with different sizes over 1000 times for each test. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Figure \ref{fig:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. Further more the experiment have demonstrated that the optimal pod is less affected by the packet size compared to the geographically far pod. 
 
+\subsection{How Kubernetes routes requests to pods (and what to do
+  about it)}
 
-The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure \ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
+\it
+The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
 \begin{figure}[tbp]
   \centering
