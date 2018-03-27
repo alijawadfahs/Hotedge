@@ -38,7 +38,7 @@
 
 %don't want date printed
 \date{}
-\title{\Large \bf Towards Fog-Aware Kubernetes}
+\title{Towards Fog-Aware Kubernetes}
 \author{
 {\rm Ali J. Fahs}\\
 Univ. Rennes, Inria, CNRS, IRISA\\
@@ -71,7 +71,7 @@ small number of data centers, fog computing rather aims to distribute
 resources as broadly as possible across some defined area so some
 resources are always located in the immediate vicinity of every end
 user's devices. Proximity between end user devices and the fog
-computing resources serving them is essential for application which
+computing resources serving them is essential for applications which
 require ultra-low network latencies (e.g., augmented reality
 applications) or where it is desirable to process data where input
 data was produced and processing results will be used (e.g., IoT data
@@ -107,10 +107,10 @@ and/or load balancing algorithms.
 
 In this paper we focus on understanding and addressing the limitations
 of Kubernetes in a fog computing scenario. Kubernetes matches many of
-the requirements of a fog platform in that it is highly scalable, it
-can run even on very limited machines thanks to its usage of
+the requirements of a fog platform: it is highly scalable and it
+can exploit even very limited machines thanks to its usage of
 lightweight containers rather than VMs. It is also a very open and
-mature platform which is now familiar to a large community of
+mature platform that is now familiar to a large community of
 application developers. We discuss the limitations of the current
 implementation and propose a roadmap of the different improvements
 that remain necessary to make Kubernetes an equally attractive
@@ -126,11 +126,11 @@ scenarios.
 
 %Explain organization of the report, what is included, and what is not.
 This paper is organised as follows. In Section~\ref{sec:plat}, we
-briefly acknowledge the possible fog computing platforms. In
-Section~\ref{sec:kube}, we introduce Kubernetes as a platform, discuss
-the advantage and disadvantages in the context of fog. In
-Section~\ref{sec:road}, we suggest the next steps through a
-roadmap. Finally, in Section~\ref{sec:conclusion} we conclude.
+discuss the state of the art. In Section~\ref{sec:kube}, we introduce
+Kubernetes as a platform, discuss its advantages and disadvantages in
+the context of fog computing platform. In Section~\ref{sec:road}, we
+suggest the next steps through a roadmap. Finally, in
+Section~\ref{sec:conclusion} we conclude.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fog Computing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,13 +139,13 @@ roadmap. Finally, in Section~\ref{sec:conclusion} we conclude.
 A fog computing platform is in charge of managing compute, storage and
 networking resources that are physically distributed across a
 geographical area such as a building, a neighborhood and a
-city~\cite{bonomi2014, fogecosystem}. It relies
-on virtualization techniques to support many independent end users and
-applications making use of these resources. For ressource-efficiency
-reasons we focused our efforts on platforms which rely on lightweight
-container technologies rather than virtual machines, enabling us to
-envisage fog computing platforms making use of resources as limited as
-Rasperry PIs for example~\cite{vankempen:hal-01446483}.
+city~\cite{bonomi2014, fogecosystem}. It relies on virtualization
+techniques to support many independent end users and applications
+making use of these resources. For ressource-efficiency reasons most
+fog computing platforms rely on lightweight container technologies
+rather than virtual machines, enabling one to envisage fog computing
+platforms making use of resources as limited as Raspberry Pis for
+example~\cite{vankempen:hal-01446483}.
 
 
 % architecture necessarily includes a number of
@@ -183,10 +183,11 @@ the next section in the specific case of Kubernetes.
 \section{Kubernetes and fog computing}\label{sec:kube}
 
 We have chosen to base our efforts on Kubernetes.  In particular, it
-offers many functionalities such as the concepts of pods and services,
-auto-scaling, and a clean separation between the applications and the
-underlying platform. It has also attracted a very large community of
-users and developers which position it as a highly mature platform.
+offers many advanced functionalities such as the concepts of pods and
+services, auto-scaling, and a clean separation between the
+applications and the underlying platform. It has also attracted a very
+large community of users and developers, which positions it as a highly
+mature platform.
 
 However, Kubernetes was designed with cloud computing scenarios in
 mind. We briefly present its main architecture, and discuss its
@@ -208,7 +209,7 @@ of a fog computing platform.
 Kubernetes is an open-source container-based platform which can manage
 the deployment and orchestration of service instances over a
 large-scale computing infrastructure. As presented in
-Figure~\ref{fig:arch}, Kubernetes cluster consist of one master node
+Figure~\ref{fig:arch}, a Kubernetes cluster consists of one master node
 and multiple worker nodes. The master node is responsible for
 monitoring and managing the cluster via a variety of control
 components such as the resource scheduler and the deployment
@@ -234,7 +235,7 @@ be placed in different nodes, communication is established as follows:
 \begin{itemize}
 \item Pod-to-pod communication is enabled using the Container Network
   Interface\footnote{\url{https://github.com/containernetworking/cni}},
-  which enables connectivity within the Kubernetes platform.
+  which enables internal connectivity within the Kubernetes platform.
 \item Communication between the pods and the external world is ensured
   by the Service using a component called \emph{kube-proxy} which
   relies on \emph{iptables} to establish the appropriate routes.
@@ -253,7 +254,7 @@ pods. Whenever a pod is exposed, it takes a virtual IP address (called
 endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
-redirected to is driven by a load-balancing policy such as
+redirected to is driven by a load-balancing policy such as random,
 round-robin, source hashing, and shortest expected delay.
 
 \medskip In the next sections we discuss the strengths and weaknesses
@@ -282,7 +283,7 @@ cloud as well as fog computing environments.
 \item[Containerization.] In a fog computing environment we expect to
   simultaneously execute large numbers of pods on modest-sized
   machines. It is therefore important to minimize the overheads due to
-  the virtualization technologies. THe fact that Kubernetes relies on
+  the virtualization technologies. The fact that Kubernetes relies on
   containers rather than virtual machines significantly reduces this
   overhead, in particular with respect to memory usage.
 
@@ -295,11 +296,10 @@ cloud as well as fog computing environments.
   cloud.
 
 \item[Community.] Kubernetes is surrounded by a large-scale community
-  consists of thousands of contributors from the industrial and
-  research field, meeting and events, and forms to file issues and ask
-  questions.  The support provided by this community eases the
-  development of the software for everyone, where a number of features
-  Kubernetes have today were developed by this community.
+  of thousands of contributors from the industrial and academic
+  fields, meeting and events, and forms to file issues and ask
+  questions. The support provided by this community eases the
+  development of the software.
 \end{description}
 
 
@@ -322,7 +322,7 @@ it difficult to use out of the box for fog computing environments.
   is to exploit the proximity between the platform resources and the
   end users~\cite{bonomi2014}. However,
   Kubernetes was designed with the hypothesis that all available
-  resources are equally suited to serve any end user. Although this
+  resources are equally suitable to serve any end user. Although this
   hypothesis is very sensible in cloud scenarios, it introduces
   significant limitations in a fog context.
 
@@ -335,7 +335,7 @@ it difficult to use out of the box for fog computing environments.
   \item \emph{Load balancing:} Even though the end users may be
     located in close vicinity of a pod providing the requested
     service, simple load-balancing policies such as round-robin may
-    direct user requests to other pods located at much gerater
+    direct user requests to other pods located at much greater
     distance. It is therefore necessary to also adjust the way user
     requests are routed to the appropriate pod.
   \end{itemize}
@@ -345,7 +345,7 @@ it difficult to use out of the box for fog computing environments.
 \section{Making Kubernetes location-aware}\label{sec:road}
 
 We believe that the most important limitation that needs to be
-addressed is to make Kubernetes location-aware as location-awareness
+addressed is to make Kubernetes location-aware since location-awareness
 is the prime goal of any fog computing platform. A longer-term
 objective will be to decentralize some of the platform's control
 processes.
@@ -361,18 +361,18 @@ processes.
 
 
 To illustrate the need for location-awareness, we deployed a small
-testbed composed of three Raspberry PI~3 nodes running Kubernetes
+testbed composed of three Raspberry Pi~3 nodes running Kubernetes
 \notegp{which version?}. As illustrated in Figure~\ref{fig:clus}, one
 of these nodes acts as the cluster's master node while the other two
-are considered as worker nodes. The worker nodes also act as WiFi
+are considered as worker nodes. The worker nodes also act as Wi-Fi
 gateways so the end users may connect to the closest worker node with
-a 1-hop WiFi connection. The master and worker nodes are connected to
+a 1-hop Wi-Fi connection. The master and worker nodes are connected to
 each other using a 1\,Gbps Ethernet local-area network\footnote{The
   local-area network infrastructure garantees a 1\,Gbps capacity
-  although the Ethernet interface of the Raspberry PI~3 only supports
-  10/100\,Mbps. This places the inter-node communication in the best
-  possible scenario, given the limitations of the Raspberry PI
-  hardware.}.
+  although the Ethernet interface of the Raspberry Pi~3 only supports
+  10/100\,Mbps. This means that the network infrastructure will not
+  impose additional bottlenecks besides the limitations of the
+  Raspberry Pi hardware.}.
 
 % Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{bonomi2014}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
 
@@ -398,29 +398,28 @@ each other using a 1\,Gbps Ethernet local-area network\footnote{The
   \label{fig:lat}
 \end{figure}
 
-Figure~\ref{fig:lat} shows the round-trip time of UDP packets
-\notegp{UDP, really?} between the end user and the two pods running
-identical Web applications:
+Figure~\ref{fig:lat} shows the network-level round-trip time between
+the end user and the two pods running identical Web applications:
 
 \begin{itemize}
-\item When accessing Pod 1, the packets need to traverse only one WiFi
+\item When accessing Pod 1, the packets need to traverse only one Wi-Fi
   network hop to reach the pod.
-\item When accessing Pod 2, the packets need to traverse one WiFi
+\item When accessing Pod 2, the packets need to traverse one Wi-Fi
   network hop plus one extra Ethernet network hop.
 \end{itemize}
 
 Clearly, reducing the network path between the end user and the pod
 which provides her with services significantly reduces the round-trip
-time latencies. The difference grows even bigger when the packet size
+time latencies. The difference grows even more when the packet size
 increases. 
 
-In this case, we believe that the main source of additional latency
-when routing a message through a 2-hop network path largely resides in
-the context switching and delays in accessing the local network
-interface in the Raspberry PI which routes traffic between the end
-user and the service pod. In a larger fog computing environment where
-nodes may be connected to various commodity networks, we expect these
-differences to be at least as large.
+We believe that the main source of additional latency when routing a
+message through a 2-hop network path largely resides in the context
+switching and delays due to multiple layers of network virtualization
+in the Raspberry Pi which routes traffic between the end user and the
+service pod. In a larger fog computing environment where
+geographically-distributed nodes may be connected to various commodity
+networks, we expect these differences to be at least as large.
 
 %\begin{table}[h]
 %\begin{center}
@@ -443,26 +442,50 @@ differences to be at least as large.
 
 % We have collected the round-trip latency for each of the pods by sending UDP packets with different sizes over 1000 times for each test. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Figure \ref{fig:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. Further more the experiment have demonstrated that the optimal pod is less affected by the packet size compared to the geographically far pod. 
 
-\subsection{How Kubernetes routes requests to pods (and what to do
-  about it)}
+\subsection{How Kubernetes routes requests to pods (and how to improve
+  it)}
 
 \it
-The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=.9\linewidth]{images/dep.png}
-  \caption{Pod deployments}
-  \label{fig:dep}
-\end{figure}
+In normal settings: one or more ingress points + any standard solution
+to direct end-user traffic to one ingress point (e.g., DNS). Then, one
+of the standard load-balancing policies to determine which pod to
+route traffic to.
+
+In our fog archi: every node is in fact an ingress point. So this
+boils down to local network tricks + adjusting the load-balancing
+strategy. We may think of redirecting traffic based on nodes' GPS
+coordinates (to minimize the physical distance), Vivaldi
+coordinates~\cite{vivaldi} (to minimize the network latency), etc.
+
+\subsection{Location-aware scheduling}
+
+When creating a new pod the scheduler should know about the end-user
+locations (approximated by the locations of gateways they are
+connected to). Then we can use latency-driven replica
+placement~\cite{szymaniak2006}. It's a dynamic system so it may be
+useful to adapt the auto-scaler (or to design an entirely new
+controller) that periodically estimates how efficient the current
+replica placement is, and initiates adjustments if necessary.
+
+Longer-term goal: decentralizing the scheduler itself.
+
+% The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure~\ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
+
+% \begin{figure}[tbp]
+%   \centering
+%   \includegraphics[width=.9\linewidth]{images/dep.png}
+%   \caption{Pod deployments}
+%   \label{fig:dep}
+% \end{figure}
 
 
-The steps that have to be taken should include adding a new measure that describe the K8's nodes, this measure would give us the exact location of the node by using GPS for example, or this measure will give us a great estimation of the location.\unsure{what you think about the measure that have to be used!}. 
-The second step toward location awareness is creating a new service type that will take the location of the node as a measure for the end user's jobs scheduling in addition of the load balancing alone.\change{add the code of the clusterIP}
+% The steps that have to be taken should include adding a new measure that describe the K8's nodes, this measure would give us the exact location of the node by using GPS for example, or this measure will give us a great estimation of the location.\unsure{what you think about the measure that have to be used!}. 
+% The second step toward location awareness is creating a new service type that will take the location of the node as a measure for the end user's jobs scheduling in addition of the load balancing alone.\change{add the code of the clusterIP}
 
-Also the location should be considered in the deployment policy of the pods. Imagine a cluster that have 100 nodes, and the maintainer would like to implement an application that have 4 replications, the location of each of those pods is essential, since locating the four of them is the proximity of each others will induce higher latencies for the far nodes, the best solution would be locating them in a way that covers the 100 nodes as equally as possible. 
+% Also the location should be considered in the deployment policy of the pods. Imagine a cluster that have 100 nodes, and the maintainer would like to implement an application that have 4 replications, the location of each of those pods is essential, since locating the four of them is the proximity of each others will induce higher latencies for the far nodes, the best solution would be locating them in a way that covers the 100 nodes as equally as possible. 
 
-Both of the previously mentioned steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
+% Both of the previously mentioned steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
 
 %\subsection{Scheduler Decentralization}
 
