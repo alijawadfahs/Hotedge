@@ -17,7 +17,7 @@
 \definecolor{jazzberryjam}{rgb}{0.65, 0.04, 0.37}
 \definecolor{ultramarine}{rgb}{0.07, 0.04, 0.56}
 \newcommand{\notegp}[1]{\note{\color{jazzberryjam}[\textsc{Guillaume:} #1]}}
-\newcommand{\noteaa}[1]{\note{\color{ultramarine}[\textsc{Arif:} #1]}}
+\newcommand{\noteaf}[1]{\note{\color{ultramarine}[\textsc{Ali:} #1]}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[none]{hyphenat}
@@ -235,7 +235,7 @@ be placed in different nodes, communication is established as follows:
   using the Container Network
   Interface\footnote{\url{https://github.com/containernetworking/cni}},
   which enables connectivity between containers within a single
-  machine.
+  machine.\noteaf{Container to container communication is done in the localhost or by sharing a resource  of the Pod, however the Pod to Pod communication uses the CNI for communication which's not limited to single node. \url{https://kubernetes.io/docs/concepts/workloads/pods/pod}}
 \item Communication between the pods is ensured a component called
   \emph{kube-proxy} which relies on \emph{iptables} to establish the
   appropriate routes.
@@ -341,9 +341,9 @@ cloud as well as fog computing environments.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Roadmap Towards Fog-aware Kubernetes}\label{sec:road}
 
-Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
+Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{Bonomi:2012:FCR:2342509.2342513}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
 
-Kubernetes code\endnote{https://github.com/kubernetes/kubernetes} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
+Kubernetes code\footnote{\url{https://github.com/kubernetes/kubernetes}} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
  
 \subsection{Location Awareness}
 
@@ -365,30 +365,35 @@ The end user will communicate with the service to be redirected to the web appli
 \caption{Test topology}
 \label{fig:clus}
 \end{figure}
-\begin{table}[h]
-\begin{center}
-\begin{tabular}{ c  c || c  c c}
+\begin{figure}[th]
+\centering\includegraphics[width=0.53\textwidth]{images/graph.png}
+\caption{Round-trip Latencies}
+\label{fig:lat}
+\end{figure}
 
-& & \multicolumn{2}{c} {Node} & \\
-& & node 1 & node 2 & \\
-\hline 
-\multirow{4}{1em}{\begin{turn}{90}Packet size \end{turn}} & 30 byte & 0.2 ms & 2.5 ms & \multirow{4}{1em}{\begin{turn}{90} Latency \end{turn}}\\
-& 100 byte & tbd ms & tbd ms &\\
-& 1000 byte & tbd ms & tbd ms &\\
-& 50,000 byte & 0.37 ms & 16.9 ms &\\
-\hline
-& Network hops & 1  & 3 & 
- 
-\end{tabular}
-\caption{Pods Performance as function of the selected pod}\label{tab:lat}
-\end{center}
-\end{table}
+%\begin{table}[h]
+%\begin{center}
+%\begin{tabular}{ c  c || c  c c}
+%
+%& & \multicolumn{2}{c} {Node} & \\
+%& & node 1 & node 2 & \\
+%\hline 
+%\multirow{4}{1em}{\begin{turn}{90}Packet size \end{turn}} & 30 byte & 0.2 ms & 2.5 ms & \multirow{4}{1em}{\begin{turn}{90} Latency \end{turn}}\\
+%& 100 byte & tbd ms & tbd ms &\\
+%& 1000 byte & tbd ms & tbd ms &\\
+%& 50,000 byte & 0.37 ms & 16.9 ms &\\
+%\hline
+%& Network hops & 1  & 3 & 
+% 
+%\end{tabular}
+%\caption{Pods Performance as function of the selected pod}\label{tab:lat}
+%\end{center}
+%\end{table}
 
-We have collected the latency for each of the pods over 1000 times, the latency was calculated by sending 50,000 byte UDP packets. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Table \ref{tab:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. 
+We have collected the round-trip latency for each of the pods by sending UDP packets with different sizes over 1000 times for each test. To avoid overloading the pod we have separated the transmission of the packets by 1 second, preventing any delays caused by processing overhead. The result of these measurements are summarized in Figure \ref{fig:lat}. Even in such an ideal conditions, where the nodes are connected using Ethernet cable and 100 Mbps switch and 1 Gbps switches in IRISA infrastructure. The results have reflected a significant increase of the latency between selecting the pod located in the node we are communicating with and any pod located elsewhere. Further more the experiment have demonstrated that the optimal pod is less affected by the packet size compared to the geographically far pod. 
 
-The difference between a node located in the 
 
-The absence of location awareness is not only needed while sending requests, but also at the deployment of the pods. Consider Figure \ref{fig:dep} where the mesh represents the geographical distribution of cluster consist of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
+The absence of location awareness is not only needed for accessing the pods, but also at the deployment of the pods. Consider Figure \ref{fig:dep} where the mesh represents the geographical distribution of a cluster consists of 40 nodes, with an application that have 4 replica pods. If the deployment container of k8's did not consider the location of the nodes, the replicas can be located in a problematic manner as in case 2, and vice-versa for case 1. \change{rephrase!}
 
 \begin{figure}[th]
 \centering\includegraphics[width=.5\textwidth]{images/dep.png}
@@ -402,7 +407,7 @@ The second step toward location awareness is creating a new service type that wi
 
 Also the location should be considered in the deployment policy of the pods. Imagine a cluster that have 100 nodes, and the maintainer would like to implement an application that have 4 replications, the location of each of those pods is essential, since locating the four of them is the proximity of each others will induce higher latencies for the far nodes, the best solution would be locating them in a way that covers the 100 nodes as equally as possible. 
 
-Both of the previously mention steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
+Both of the previously mentioned steps would need state-of-the-art algorithms that will take all the factors and available pods to choose the best pod to be used, still, starting from the simplest algorithms like choosing the closest node would be a good start before digging deep in more complicated algorithms.
 
 %\subsection{Scheduler Decentralization}
 
@@ -440,7 +445,7 @@ next objective.
 
 
 
-\theendnotes
+%\theendnotes
 
 
 {\footnotesize \bibliographystyle{acm}
