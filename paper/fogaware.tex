@@ -41,11 +41,11 @@
 \title{\Large \bf Towards Fog-Aware Kubernetes}
 \author{
 {\rm Ali J. Fahs}\\
-Univ Rennes, Inria, CNRS, IRISA\\
+Univ. Rennes, Inria, CNRS, IRISA\\
 ali.fahs@irisa.fr
 \and
 {\rm Guillaume Pierre}\\
-Univ Rennes, Inria, CNRS, IRISA\\
+Univ. Rennes, Inria, CNRS, IRISA\\
 guillaume.pierre@irisa.fr
 }
 \maketitle
@@ -139,7 +139,7 @@ roadmap. Finally, in Section~\ref{sec:conclusion} we conclude.
 A fog computing platform is in charge of managing compute, storage and
 networking resources that are physically distributed across a
 geographical area such as a building, a neighborhood and a
-city~\cite{Bonomi:2012:FCR:2342509.2342513, fogecosystem}. It relies
+city~\cite{bonomi2014, fogecosystem}. It relies
 on virtualization techniques to support many independent end users and
 applications making use of these resources. For ressource-efficiency
 reasons we focused our efforts on platforms which rely on lightweight
@@ -320,18 +320,18 @@ it difficult to use out of the box for fog computing environments.
 
 \item[Location unawareness.]  The purpose of a fog computing platform
   is to exploit the proximity between the platform resources and the
-  end users~\cite{Bonomi:2012:FCR:2342509.2342513}. However,
+  end users~\cite{bonomi2014}. However,
   Kubernetes was designed with the hypothesis that all available
-  resources are equally suited to serve any user. Although this
+  resources are equally suited to serve any end user. Although this
   hypothesis is very sensible in cloud scenarios, it introduces
   significant limitations in a fog context.
 
-  \begin{itemize}[leftmargin=*,itemsep=0pt,topsep=-5pt,labelsep=8pt]
+  \begin{itemize}[leftmargin=*,itemsep=2pt,topsep=-3pt,labelsep=6pt]
   \item \emph{Pod scheduling:} When creating a new pod, the Kubernetes
-    scheduler does not take the end user locations into account to
-    determine which worker node should execute the new pod. As a
-    result, the pods which consitute a service maybe located further
-    away than necessary from the end users they are serving.
+    scheduler does not take the end users' locations into account to
+    determine which worker node should host the new pod. As a result,
+    the pods which consitute a service may be located further away
+    than necessary from the end users they are serving.
   \item \emph{Load balancing:} Even though the end users may be
     located in close vicinity of a pod providing the requested
     service, simple load-balancing policies such as round-robin may
@@ -344,7 +344,7 @@ it difficult to use out of the box for fog computing environments.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Roadmap %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A roadmap towards fog-aware Kubernetes}\label{sec:road}
 
-Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{Bonomi:2012:FCR:2342509.2342513}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
+Achieving a platform that full-fill the requirements of the fog depend on achieving two main things: a low latency that will support the latency sensitive applications, and a platform that consider resource's location when making scheduling decisions as defined in \cite{bonomi2014}. In the previous section, we have explained how K8's lack those two pillars, however enhancing K8's to support them is achievable.
 
 Kubernetes code\footnote{\url{https://github.com/kubernetes/kubernetes}} was configured on a cluster made up of 4 Raspberry Pi's(RPi's), one of the RPi acts as the master node and the others are worker nodes. In kubernetes, we have looked for the parts that we need to change, understood the general structure of the code, and then we formulated our guidelines for the upcoming steps that can be split into two. 
  
