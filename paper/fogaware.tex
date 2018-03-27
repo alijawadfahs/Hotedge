@@ -70,7 +70,7 @@ platforms aim to concentrate huge amounts of computing resources in a
 small number of data centers, fog computing rather aims to distribute
 resources as broadly as possible across some defined area so some
 resources are always located in the immediate vicinity of every end
-user's devices. Proximity between end user devices and the fog
+user's devices. Proximity between end user's devices and the fog
 computing resources serving them is essential for applications which
 require ultra-low network latencies (e.g., augmented reality
 applications) or where it is desirable to process data where input
@@ -141,7 +141,7 @@ networking resources that are physically distributed across a
 geographical area such as a building, a neighborhood and a
 city~\cite{bonomi2014, fogecosystem}. It relies on virtualization
 techniques to support many independent end users and applications
-making use of these resources. For ressource-efficiency reasons most
+making use of these resources. For resource-efficiency reasons most
 fog computing platforms rely on lightweight container technologies
 rather than virtual machines, enabling one to envisage fog computing
 platforms making use of resources as limited as Raspberry Pis for
@@ -213,7 +213,7 @@ Figure~\ref{fig:arch}, a Kubernetes cluster consists of one master node
 and multiple worker nodes. The master node is responsible for
 monitoring and managing the cluster via a variety of control
 components such as the resource scheduler and the deployment
-controllers. Conversely, the worker nodes actually execute user
+controllers. Conversely, the worker nodes actually execute user's
 applications inside containers according to instructions given by the
 master node.
 
@@ -226,7 +226,7 @@ expected to create a \emph{Deployment Controller}, which is in charge
 of the creation and management of one or more identical pods providing
 the expected service. Such a set of pods can be made publicly
 accessible from external end users by creating a \emph{Service} which
-acts as a frontend for the group of pods.
+acts as a frontend for the group of pods.\noteaf{frontend or front-end?}
 
 The master may schedule each pod in any worker node, by default chosen
 as the worker node with the lowest load in the system. Since pods may
@@ -255,7 +255,7 @@ endpoint) and receives a label (Label X in the figure). The Service
 then acts as a load balancer between all the registered pods with the
 chosen label. The selection of the pod an end user request gets
 redirected to is driven by a load-balancing policy such as random,
-round-robin, source hashing, and shortest expected delay.
+round-robin, source hashing, and shortest expected delay.\noteaf{ The load balancing part}
 
 \medskip In the next sections we discuss the strengths and weaknesses
 of this architecture in the specific case where one chooses to use
@@ -291,7 +291,7 @@ cloud as well as fog computing environments.
   where the system continuously monitors itself in order to react to
   any discrepancy between the actual and the desired system
   state. This makes Kubernetes extremely robust in face of various
-  types of failures and misbehaviors that are due to be even more
+  types of failures and misbehaviours that are due to be even more
   frequent in a decentralized fog architecture than a datacenter-based
   cloud.
 
@@ -330,7 +330,7 @@ it difficult to use out of the box for fog computing environments.
   \item \emph{Pod scheduling:} When creating a new pod, the Kubernetes
     scheduler does not take the end users' locations into account to
     determine which worker node should host the new pod. As a result,
-    the pods which consitute a service may be located further away
+    the pods which constitute a service may be located further away
     than necessary from the end users they are serving.
   \item \emph{Load balancing:} Even though the end users may be
     located in close vicinity of a pod providing the requested
@@ -361,14 +361,13 @@ processes.
 
 
 To illustrate the need for location-awareness, we deployed a small
-testbed composed of three Raspberry Pi~3 nodes running Kubernetes
-\notegp{which version?}. As illustrated in Figure~\ref{fig:clus}, one
+testbed \noteaf{testbed or test-bed?}composed of three Raspberry Pi~3 nodes running Kubernetes v1.9. As illustrated in Figure~\ref{fig:clus}, one
 of these nodes acts as the cluster's master node while the other two
 are considered as worker nodes. The worker nodes also act as Wi-Fi
 gateways so the end users may connect to the closest worker node with
 a 1-hop Wi-Fi connection. The master and worker nodes are connected to
 each other using a 1\,Gbps Ethernet local-area network\footnote{The
-  local-area network infrastructure garantees a 1\,Gbps capacity
+  local-area network infrastructure guarantees a 1\,Gbps capacity
   although the Ethernet interface of the Raspberry Pi~3 only supports
   10/100\,Mbps. This means that the network infrastructure will not
   impose additional bottlenecks besides the limitations of the
@@ -409,7 +408,7 @@ the end user and the two pods running identical Web applications:
 \end{itemize}
 
 Clearly, reducing the network path between the end user and the pod
-which provides her with services significantly reduces the round-trip
+which provides him with services significantly reduces the round-trip
 time latencies. The difference grows even more when the packet size
 increases. 
 
