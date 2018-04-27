@@ -1,0 +1,95 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{xcolor}
+\newcommand{\note}[1]{\noindent{\color{red}\textbf{#1}}}
+\definecolor{jazzberryjam}{rgb}{0.65, 0.04, 0.37}
+\definecolor{ultramarine}{rgb}{0.07, 0.04, 0.56}
+\newcommand{\notegp}[1]{\note{\color{jazzberryjam}[\textsc{Guillaume:} #1]}}
+\newcommand{\noteaf}[1]{\note{\color{ultramarine}[\textsc{Ali:} #1]}}
+
+
+%% Title
+\title{
+        %\vspace{-1in}  
+        \usefont{OT1}{bch}{b}{n}
+        \normalfont \normalsize \textsc{CSID, First Year Report} \\ [10pt]
+        \huge  Decentralized Fog Computing Infrastructure Control \\
+}
+
+\usepackage{authblk}
+
+\author{Ali J. FAHS \\
+Supervised by Professor Guillaume PIERRE}
+
+\date{May 18, 2018}
+
+
+    \affil{\small{Univ Rennes, Inria, CNRS, IRISA}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+\selectlanguage{english}
+
+\section{Introduction}
+The main objective of this research work is creating the optimized infrastructure control for fog computing architecture. This broad objective is divided into steps that each will achieve a small improvement. 
+
+During the course of 7 months, we have achieved a noticeable progress in shedding the light on the problem, and the lack of some key features that define the fog in the nowadays potential platforms. 
+
+After the literature and defining the problem, we started the execution of a roadmap were we expect at the end of this map reaching a platform that can support the fog needs. 
+
+\section{Fog platform \\ \& Kubernetes }
+
+A fog computing platform is in charge of managing compute, storage and networking resources that are physically distributed across a geographical area such as a building, a neighborhood and a city ~\cite{bonomi2014, fogecosystem}.
+
+The most prominent cloud platforms are Docker Swarm, Apache Mesos and Kubernetes~\cite{burns2016borg}, which all provide advanced features for container scheduling, cluster management, and support for large-scale clusters. They are currently the most mature systems to support the deployment of a fog/cloud platform. However, they lack a number of functionalities that are essential for large-scale fog computing scenarios, as we discuss in
+the next section in the specific case of Kubernetes.
+
+
+We have chosen to base our efforts on Kubernetes.  In particular, it offers many advanced functionalities such as the concepts of pods and services, auto-scaling, and a clean separation between the applications and the underlying platform. It has also attracted a very large community of users and developers, which positions it as a highly mature platform. However, Kubernetes was designed with cloud computing scenarios in mind. As a result the way Kubernetes manages the fog is far from good, we can demonstrate this by the following: 
+\begin{itemize}
+\item The way Kubernetes services distribute the work-load over containers replica set ignores the locations of the nodes, and  respectively the end-to-end latency.
+\item The Deployment controller locates the users' application containers regardless of the nodes location. Such approach will not affect a cloud cluster but will have devastating outcomes for the fog. 
+\item The infrastructure control in Kubernetes is completely centralized, such centralization imposes heavy network traffic for a minimal fog network. 
+\end{itemize}
+
+For the current time, we are digging deep in Kubernetes (2.2M lines of Go code + 1.2M lines in other languages). We are exposing the key elements of the platform, and about to implement a new service using iptables, that will support location awareness. 
+
+\section{Work Progress}
+\begin{enumerate}
+\item Creating a Rpi's cluster that runs Kuberentes, that will be used as our test-bed. 
+\item Configuring a local cluster for Kubernetes development.
+\item Understanding the vital parts of the Kubernetes architecture in general, an the networking part in particular.
+\item Submitting a towards paper to HotEdge 2018 workshop\cite{ali}, this paper contains a detailed roadmap for the upcoming steps. 
+  
+\end{enumerate}
+
+
+\section*{Conclusions}
+
+Fog and cloud computing platforms share many identical concerns, which
+makes it attractive to use mature cloud computing platforms to build
+new fog computing platforms. However, this requires a number of
+adjustments in particular to support location-awareness. We have
+chosen Kubernetes as the basis for our work, and proposed a roadmap of
+the necessary adjustments before it can realistically be considered as
+the world's best fog computing platform.
+
+\bibliography{mybib}{}
+\bibliographystyle{plain}
+
+
+\end{document}
