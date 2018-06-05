@@ -1,0 +1,12 @@
+\beamer@sectionintoc {1}{Introduction \& Background}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{General Introduction}{2}{0}{1}
+\beamer@subsectionintoc {1}{2}{The Fog}{5}{0}{1}
+\beamer@subsectionintoc {1}{3}{PhD Objectives}{11}{0}{1}
+\beamer@sectionintoc {2}{Related Work}{14}{0}{2}
+\beamer@sectionintoc {3}{Kubernetes}{15}{0}{3}
+\beamer@subsectionintoc {3}{1}{Kubernetes architecture}{15}{0}{3}
+\beamer@subsectionintoc {3}{2}{Kubernetes services}{17}{0}{3}
+\beamer@sectionintoc {4}{Targeted Problems}{19}{0}{4}
+\beamer@subsectionintoc {4}{1}{Services Random Selection}{19}{0}{4}
+\beamer@subsectionintoc {4}{2}{Deployment Random Selection}{21}{0}{4}
+\beamer@subsectionintoc {4}{3}{Kubernetes Control Decentralization }{23}{0}{4}

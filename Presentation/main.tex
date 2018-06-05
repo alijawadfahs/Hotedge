@@ -1,0 +1,130 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage[super]{nth}
+\usetheme{Malmoe}
+\newcommand{\ts}{\textsuperscript}
+
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+
+
+\beamertemplatenavigationsymbolsempty
+\makeatother
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle\hspace*{3em}
+    \insertframenumber{} / 14
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+%%%%%%%%%%FIRST SLIDE%%%%%%%%%%
+
+\setbeamercolor*{title}{use=structure,fg=white,bg=structure.fg}
+\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true,shadow=true]
+\title[Decentralized Fog Computing Infrastructure Control]{Decentralized Fog Computing Infrastructure Control}
+
+\author{ Ali Jawad FAHS\\}
+
+
+\institute[] 
+{Univ Rennes, INRIA, CNRS, IRISA.
+\vskip 1em
+Supervised by: Prof. Guillaume PIERRE \\
+ }
+
+\date{\nth{18} of May,2018}
+
+
+
+\subject{PhD}
+%%%%%%%%%%%%%%%%%%%%%%%% OUTLINE%%%%%%%%%%%%
+\AtBeginSubsection[]
+{ \begin{withoutheadline}
+\setbeamertemplate{footline}{} 
+  \begin{frame}<beamer>{Outline}
+  
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+  \end{withoutheadline}
+}
+
+%%%%%%%%%%%%%%%%%%%% SLIDES %%%%%%%%%%%%%%%%
+
+
+
+
+\begin{document}
+\begin{withoutheadline}
+\setbeamertemplate{footline}{} 
+\begin{frame}
+  \titlepage
+
+\begin{itemize}
+\item[]
+\begin{center}
+
+\includegraphics[width=0.3\linewidth]{figures/irisa.png} \hskip 1em
+\includegraphics[width=0.25\linewidth]{figures/ur1.png} \hskip 1em
+\end{center}
+\end{itemize}
+
+
+\end{frame}
+\end{withoutheadline}
+%%%%%%%%%%%%%%%%%%%%%%%% first %%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%% content%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{./intro}
+
+
+
+\include{./kub}
+\include{./loca}
+
+\section*{last}
+
+
+\begin{withoutheadline}
+\begin{frame}
+
+
+\setbeamercolor{block title}{bg=blue!30,fg=black}
+\setbeamercolor{block body}{bg=blue!10,fg=black}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\begin{tabular}{ccc}
+\includegraphics[page=6, width=0.3\textwidth]{ali.pdf} &
+\includegraphics[page=15, width=0.3\textwidth]{ali.pdf} &
+\includegraphics[page=17, width=0.3\textwidth]{ali.pdf} \\
+
+\includegraphics[page=19, width=0.3\textwidth]{ali.pdf} &
+\includegraphics[page=21, width=0.3\textwidth]{ali.pdf} &
+\includegraphics[page=23, width=0.3\textwidth]{ali.pdf} \\
+
+
+
+
+\end{tabular}
+
+\begin{block}{}
+\centering Thanks for your attention!\\
+Questions?
+\end{block}
+
+
+\end{frame}
+\end{withoutheadline}
+
+\end{document}

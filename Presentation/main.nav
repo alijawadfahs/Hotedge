@@ -1,0 +1,68 @@
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\sectionentry {1}{Introduction \& Background}{2}{Introduction \& Background}{0}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{2}{General Introduction}}\headcommand {\beamer@subsectionpages {2}{1}}
+\headcommand {\slideentry {1}{1}{1}{2/2}{General Introduction}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\slideentry {1}{1}{2}{3/4}{General Introduction}{0}}
+\headcommand {\beamer@framepages {3}{4}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{5}{The Fog}}\headcommand {\beamer@subsectionpages {2}{4}}
+\headcommand {\slideentry {1}{2}{1}{5/5}{The Fog}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\slideentry {1}{2}{2}{6/6}{The Fog}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\slideentry {1}{2}{3}{7/10}{The Fog}{0}}
+\headcommand {\beamer@framepages {7}{10}}
+\headcommand {\beamer@subsectionentry {0}{1}{3}{11}{PhD Objectives}}\headcommand {\beamer@subsectionpages {5}{10}}
+\headcommand {\slideentry {1}{3}{1}{11/11}{PhD Objectives}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\slideentry {1}{3}{2}{12/13}{PhD Objectives}{0}}
+\headcommand {\beamer@framepages {12}{13}}
+\headcommand {\sectionentry {2}{Related Work}{14}{Related Work}{0}}
+\headcommand {\beamer@sectionpages {2}{13}}
+\headcommand {\beamer@subsectionpages {11}{13}}
+\headcommand {\slideentry {2}{0}{1}{14/14}{}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\sectionentry {3}{Kubernetes}{15}{Kubernetes}{0}}
+\headcommand {\beamer@sectionpages {14}{14}}
+\headcommand {\beamer@subsectionpages {14}{14}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{15}{Kubernetes architecture}}\headcommand {\beamer@subsectionpages {15}{14}}
+\headcommand {\slideentry {3}{1}{1}{15/15}{Kubernetes architecture}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\slideentry {3}{1}{2}{16/16}{Kubernetes architecture}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{17}{Kubernetes services}}\headcommand {\beamer@subsectionpages {15}{16}}
+\headcommand {\slideentry {3}{2}{1}{17/17}{Kubernetes services}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\slideentry {3}{2}{2}{18/18}{Kubernetes services}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\sectionentry {4}{Targeted Problems}{19}{Targeted Problems}{0}}
+\headcommand {\beamer@sectionpages {15}{18}}
+\headcommand {\beamer@subsectionpages {17}{18}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{19}{Services Random Selection}}\headcommand {\beamer@subsectionpages {19}{18}}
+\headcommand {\slideentry {4}{1}{1}{19/19}{Services Random Selection}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\slideentry {4}{1}{2}{20/20}{Services Random Selection}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\beamer@subsectionentry {0}{4}{2}{21}{Deployment Random Selection}}\headcommand {\beamer@subsectionpages {19}{20}}
+\headcommand {\slideentry {4}{2}{1}{21/21}{Deployment Random Selection}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {4}{2}{2}{22/22}{Deployment Random Selection}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\beamer@subsectionentry {0}{4}{3}{23}{Kubernetes Control Decentralization }}\headcommand {\beamer@subsectionpages {21}{22}}
+\headcommand {\slideentry {4}{3}{1}{23/23}{Kubernetes Control Decentralization }{0}}
+\headcommand {\beamer@framepages {23}{23}}
+\headcommand {\slideentry {4}{3}{2}{24/24}{Kubernetes Control Decentralization }{0}}
+\headcommand {\beamer@framepages {24}{24}}
+\headcommand {\sectionentry {5}{last}{25}{last}{0}}
+\headcommand {\beamer@sectionpages {19}{24}}
+\headcommand {\beamer@subsectionpages {23}{24}}
+\headcommand {\slideentry {5}{0}{1}{25/25}{}{0}}
+\headcommand {\beamer@framepages {25}{25}}
+\headcommand {\beamer@partpages {1}{25}}
+\headcommand {\beamer@subsectionpages {25}{25}}
+\headcommand {\beamer@sectionpages {25}{25}}
+\headcommand {\beamer@documentpages {25}}
+\headcommand {\def \inserttotalframenumber {14}}

@@ -20,12 +20,13 @@
 \newcommand{\noteaf}[1]{\note{\color{ultramarine}[\textsc{Ali:} #1]}}
 
 
+
 %% Title
 \title{
         %\vspace{-1in}  
         \usefont{OT1}{bch}{b}{n}
         \normalfont \normalsize \textsc{CSID, First Year Report} \\ [10pt]
-        \huge  Decentralized Fog Computing Infrastructure Control \\
+        \huge  Decentralized Fog Computing Infrastructure Control
 }
 
 \usepackage{authblk}
@@ -40,8 +41,10 @@ Supervised by Professor Guillaume PIERRE}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\maketitle
+%\includegraphics[scale=.1]{images/logo.png}
 
+ali 
+{\let\newpage\relax\maketitle}
 \selectlanguage{english}
 
 \section{Introduction}
@@ -77,16 +80,6 @@ For the current time, we are digging deep in Kubernetes (2.2M lines of Go code +
   
 \end{enumerate}
 
-
-\section*{Conclusions}
-
-Fog and cloud computing platforms share many identical concerns, which
-makes it attractive to use mature cloud computing platforms to build
-new fog computing platforms. However, this requires a number of
-adjustments in particular to support location-awareness. We have
-chosen Kubernetes as the basis for our work, and proposed a roadmap of
-the necessary adjustments before it can realistically be considered as
-the world's best fog computing platform.
 
 \bibliography{mybib}{}
 \bibliographystyle{plain}
